@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlumCraft — Premium Aluminum Sublimation Blanks</title>
+  <meta name="description" content="Professional manufacturer of aluminum sublimation blank cards, metal business cards, and custom-shaped aluminum pieces for heat press applications." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #141414;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #202020;
+      --metal-light: #d4d4d8;
+      --metal-mid: #a1a1aa;
+      --metal-dark: #71717a;
+      --accent: #e4e4e7;
+      --accent-warm: #fafafa;
+      --border: rgba(255,255,255,0.07);
+      --border-hover: rgba(255,255,255,0.15);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #52525b;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --radius: 4px;
+      --radius-lg: 8px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(212, 212, 216, 0.2); color: var(--text-primary); }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+    /* ─── Utility ─── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .label {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--metal-mid);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 2px;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #e4e4e7, #71717a);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-mark svg { width: 18px; height: 18px; }
+    .nav-logo-text {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 400;
+      transition: var(--transition);
+      position: relative;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: var(--transition);
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      padding: 8px 20px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .nav-cta:hover { background: var(--metal-light); }
+
+    /* ─── Hero ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 40%, rgba(212,212,216,0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 10% 80%, rgba(113,113,122,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black, transparent);
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .hero-content { max-width: 720px; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(212,212,216,0.06);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      color: var(--metal-mid);
+      margin-bottom: 32px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.04em;
+      color: var(--text-primary);
+      margin-bottom: 28px;
+    }
+    .hero h1 .metal {
+      background: linear-gradient(135deg, #fafafa 0%, #a1a1aa 50%, #fafafa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: var(--metal-light); transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text-primary);
+      padding: 14px 28px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: 1px solid var(--border-hover);
+      transition: var(--transition);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
+
+    /* Hero Stats */
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-item {}
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--metal-dark);
+      margin-top: 6px;
+    }
+
+    /* ─── Products ─── */
+    .products { padding: 120px 0; }
+    .products-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 64px;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .product-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+    }
+    .product-visual {
+      height: 220px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-visual-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0.6;
+    }
+    .product-visual .card-mock {
+      position: relative;
+      z-index: 1;
+      width: 160px;
+      height: 100px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+    }
+    .card-type-1 .product-visual-bg {
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    }
+    .card-type-2 .product-visual-bg {
+      background: linear-gradient(135deg, #2d1b69, #1a0533, #0d0221);
+    }
+    .card-type-3 .product-visual-bg {
+      background: linear-gradient(135deg, #1b2838, #0a1628, #0d1b2a);
+    }
+    .card-type-4 .product-visual-bg {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a, #1a1a1a);
+    }
+    .card-type-1 .card-mock {
+      background: linear-gradient(135deg, #2a2a3a, #1e1e2e);
+      box-shadow: 0 20px 60px rgba(100,100,255,0.15);
+    }
+    .card-type-2 .card-mock {
+      background: linear-gradient(135deg, #3a2a5a, #2a1a4a);
+      box-shadow: 0 20px 60px rgba(150,100,255,0.15);
+    }
+    .card-type-3 .card-mock {
+      background: linear-gradient(135deg, #2a3a4a, #1a2a3a);
+      box-shadow: 0 20px 60px rgba(100,150,200,0.15);
+    }
+    .card-type-4 .card-mock {
+      background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+      box-shadow: 0 20px 60px rgba(255,255,255,0.05);
+    }
+    .product-info { padding: 24px; }
+    .product-category {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--metal-dark);
+      margin-bottom: 8px;
+    }
+    .product-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .product-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag {
+      font-size: 0.7rem;
+      color: var(--metal-mid);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+
+    /* ─── Capabilities ─── */
+    .capabilities { padding: 120px 0; background: var(--bg-secondary); }
+    .cap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .cap-visual {
+      position: relative;
+    }
+    .cap-mockup {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .cap-mockup-inner {
+      position: absolute;
+      inset: 24px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .cap-cards {
+      display: flex;
+      gap: 12px;
+    }
+    .cap-card-small {
+      width: 80px;
+      height: 50px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .cap-card-small:nth-child(1) { background: linear-gradient(135deg, #2a2a3a, #1e1e2e); transform: rotate(-4deg); }
+    .cap-card-small:nth-child(2) { background: linear-gradient(135deg, #3a2a5a, #2a1a4a); transform: rotate(0deg); }
+    .cap-card-small:nth-child(3) { background: linear-gradient(135deg, #2a3a4a, #1a2a3a); transform: rotate(4deg); }
+    .cap-items { display: flex; flex-direction: column; gap: 32px; }
+    .cap-item { display: flex; gap: 20px; }
+    .cap-icon {
+      width: 44px; height: 44px;
+      flex-shrink: 0;
+      background: rgba(212,212,216,0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cap-icon svg { width: 20px; height: 20px; color: var(--metal-mid); }
+    .cap-item-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .cap-item-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ─── Process ─── */
+    .process { padding: 120px 0; }
+    .process-header { text-align: center; margin-bottom: 80px; }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: 12.5%; right: 12.5%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+    }
+    .step { text-align: center; position: relative; }
+    .step-num {
+      width: 56px; height: 56px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      position: relative; z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--metal-mid);
+      transition: var(--transition);
+    }
+    .step:hover .step-num {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      border-color: var(--text-primary);
+    }
+    .step-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    /* ─── Testimonial / Social Proof ─── */
+    .proof { padding: 120px 0; background: var(--bg-secondary); }
+    .proof-header { text-align: center; margin-bottom: 64px; }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .proof-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      transition: var(--transition);
+    }
+    .proof-card:hover { border-color: var(--border-hover); }
+    .proof-stars {
+      display: flex; gap: 4px; margin-bottom: 16px;
+    }
+    .proof-stars svg { width: 14px; height: 14px; fill: #facc15; }
+    .proof-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    .proof-author { display: flex; align-items: center; gap: 12px; }
+    .proof-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #333, #444);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--metal-mid);
+    }
+    .proof-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+    .proof-role { font-size: 0.75rem; color: var(--metal-dark); }
+
+    /* ─── Contact ─── */
+    .contact { padding: 120px 0; }
+    .contact-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .contact-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+    }
+    .form-group { margin-bottom: 24px; }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--metal-mid);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      padding: 12px 16px;
+      outline: none;
+      transition: var(--transition);
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.03);
+    }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-select { cursor: pointer; appearance: none; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-submit {
+      width: 100%;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      padding: 14px;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .form-submit:hover { background: var(--metal-light); }
+    .contact-info {}
+    .contact-info .label { margin-bottom: 20px; }
+    .contact-info .section-title { margin-bottom: 24px; }
+    .contact-info .section-sub { margin-bottom: 48px; }
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .contact-detail-icon {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-detail-icon svg { width: 18px; height: 18px; color: var(--metal-mid); }
+    .contact-detail-title { font-size: 0.8rem; color: var(--metal-dark); margin-bottom: 4px; }
+    .contact-detail-value { font-size: 0.95rem; color: var(--text-primary); }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      background: var(--bg-secondary);
+    }
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-left { font-size: 0.8rem; color: var(--metal-dark); }
+    .footer-left a { color: var(--metal-mid); text-decoration: none; }
+    .footer-left a:hover { color: var(--text-primary); }
+    .footer-social { display: flex; gap: 16px; }
+    .footer-social a {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--metal-mid);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .footer-social a:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
+    .footer-social svg { width: 16px; height: 16px; }
+
+    /* ─── Animations ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .cap-grid, .contact-wrapper { grid-template-columns: 1fr; gap: 48px; }
+      .cap-visual { order: -1; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .process-steps::before { display: none; }
+      .hero-stats { gap: 32px; }
+      .form-row { grid-template-columns: 1fr; }
+      .hero { min-height: auto; padding: 120px 0 60px; }
+    }
+
+    @media (max-width: 480px) {
+      .process-steps { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { text-align: center; justify-content: center; }
+    }
+
+    /* ─── Floating inquiry bar ─── */
+    .floating-bar {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .float-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      transition: var(--transition);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .float-btn svg { width: 20px; height: 20px; }
+    .float-whatsapp { background: #25d366; color: white; }
+    .float-whatsapp:hover { background: #1fb855; transform: scale(1.1); }
+    .float-email { background: var(--text-primary); color: var(--bg-primary); }
+    .float-email:hover { background: var(--metal-light); transform: scale(1.1); }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <div class="nav-logo-mark">
+          <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="14" height="8" rx="1.5" stroke="#0d0d0d" stroke-width="1.5"/>
+            <path d="M5 5V4a2 2 0 014 0v1" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 10h2m2 0h2" stroke="#0d0d0d" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="nav-logo-text">AlumCraft</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#products">Products</a></li>
+        <li><a href="#capabilities">Capabilities</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+      </ul>
+      <a href="#contact" class="nav-cta">Get a Quote</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          Direct Manufacturer &nbsp;·&nbsp; Global Shipping
+        </div>
+        <h1>
+          Precision <span class="metal">Aluminum</span><br>
+          Blanks for<br>
+          Sublimation &amp; Heat Press
+        </h1>
+        <p class="hero-desc">
+          We craft premium aluminum sheets precisely cut and coated for sublimation printing, heat press, and dye-sub applications. Standard shapes or custom die-cuts — built to your specs.
+        </p>
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">
+            Request Free Sample
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#products" class="btn-secondary">View Products</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-value">0.3mm–2.0mm</div>
+            <div class="stat-label">Aluminum Thickness</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">CR80 + Custom</div>
+            <div class="stat-label">Standard &amp; Custom Sizes</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">3–5 Days</div>
+            <div class="stat-label">Sample Lead Time</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">15+</div>
+            <div class="stat-label">Countries Served</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section class="products" id="products">
+    <div class="container">
+      <div class="products-header reveal">
+        <div>
+          <span class="label">Product Line</span>
+          <h2 class="section-title">What We Make</h2>
+          <p class="section-sub">Every blank is laser-cut, edge-polished, and sublimation-coated in-house — consistent quality from piece one to ten thousand.</p>
+        </div>
+      </div>
+      <div class="product-grid">
+        <div class="product-card card-type-1 reveal reveal-delay-1">
+          <div class="product-visual">
+            <div class="product-visual-bg"></div>
+            <div class="card-mock">CR80<br/>85.6×54mm</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">Standard Cards</div>
+            <div class="product-name">Sublimation Aluminum Card — CR80</div>
+            <div class="product-desc">Standard credit-card sized aluminum blanks. Perfect for membership cards, loyalty programs, gift cards, and ID accessories.</div>
+            <div class="product-tags">
+              <span class="tag">85.6×54mm</span>
+              <span class="tag">0.5–1.0mm</span>
+              <span class="tag">Sublimation Coated</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card card-type-2 reveal reveal-delay-2">
+          <div class="product-visual">
+            <div class="product-visual-bg"></div>
+            <div class="card-mock">Custom<br/>Shape</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">Custom Shapes</div>
+            <div class="product-name">Custom Die-Cut Aluminum Blanks</div>
+            <div class="product-desc">Any shape, any size. Send us your vector file and we cut, coat, and ship — ready for your heat press in days.</div>
+            <div class="product-tags">
+              <span class="tag">Custom Sizes</span>
+              <span class="tag">Vector File Ready</span>
+              <span class="tag">MOQ: 50pcs</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card card-type-3 reveal reveal-delay-3">
+          <div class="product-visual">
+            <div class="product-visual-bg"></div>
+            <div class="card-mock">Business<br/>Card</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">Metal Business Cards</div>
+            <div class="product-name">Brushed Aluminum Business Card Blanks</div>
+            <div class="product-desc">Premium brushed-surface aluminum blanks for high-end business card printing. Durable, elegant, unforgettable.</div>
+            <div class="product-tags">
+              <span class="tag">90×54mm</span>
+              <span class="tag">Brushed Finish</span>
+              <span class="tag">No MOQ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card card-type-4 reveal reveal-delay-4">
+          <div class="product-visual">
+            <div class="product-visual-bg"></div>
+            <div class="card-mock">Special<br/>Application</div>
+          </div>
+          <div class="product-info">
+            <div class="product-category">Specialty Blanks</div>
+            <div class="product-name">Custom Aluminum Pieces for Heat Press</div>
+            <div class="product-desc">Tags, plaques, keychains, bookmarks, luggage tags — if it fits on a heat press, we can make the blank for it.</div>
+            <div class="product-tags">
+              <span class="tag">Any Shape</span>
+              <span class="tag">Versatile Coating</span>
+              <span class="tag">Prototype OK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="capabilities" id="capabilities">
+    <div class="container">
+      <div class="cap-grid">
+        <div class="cap-visual reveal">
+          <div class="cap-mockup">
+            <div class="cap-mockup-inner">
+              <div class="cap-cards">
+                <div class="cap-card-small"></div>
+                <div class="cap-card-small"></div>
+                <div class="cap-card-small"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2">
+          <span class="label">Why AlumCraft</span>
+          <h2 class="section-title">Built for Printers.<br>Trusted by Businesses.</h2>
+          <p class="section-sub" style="margin-bottom:40px;">We don't just cut aluminum. We understand the full journey from blank to finished product — so our blanks are optimized for your workflow.</p>
+          <div class="cap-items">
+            <div class="cap-item">
+              <div class="cap-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <div class="cap-item-title">Consistent Coating Quality</div>
+                <div class="cap-item-desc">Every batch is tested for ink adhesion. No peeling, no ghosting — your prints come out crisp every single time.</div>
+              </div>
+            </div>
+            <div class="cap-item">
+              <div class="cap-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+              </div>
+              <div>
+                <div class="cap-item-title">Fast Sample Turnaround</div>
+                <div class="cap-item-desc">3–5 days from your file to a physical sample in your hands. We know speed matters for winning new business.</div>
+              </div>
+            </div>
+            <div class="cap-item">
+              <div class="cap-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+              </div>
+              <div>
+                <div class="cap-item-title">Flexible MOQ &amp; Scaling</div>
+                <div class="cap-item-desc">Start with 10 pieces for testing. Scale to 10,000+ for large runs. Volume pricing kicks in early — we believe in growing together.</div>
+              </div>
+            </div>
+            <div class="cap-item">
+              <div class="cap-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+              </div>
+              <div>
+                <div class="cap-item-title">Custom Packaging Options</div>
+                <div class="cap-item-desc">Branded packaging, individual sleeves, bulk poly bags — whatever your fulfillment needs, we can accommodate them.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="process-header reveal">
+        <span class="label">How It Works</span>
+        <h2 class="section-title">From Idea to Finished Blank</h2>
+        <p class="section-sub" style="margin: 0 auto;">A simple, transparent 4-step process. No surprises. No minimum headaches.</p>
+      </div>
+      <div class="process-steps">
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">01</div>
+          <div class="step-title">Send Your Specs</div>
+          <div class="step-desc">Share your size, shape, quantity, and any special requirements via email or our contact form.</div>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">02</div>
+          <div class="step-title">Receive a Quote</div>
+          <div class="step-desc">We reply within 24 hours with a detailed quote including pricing, lead time, and shipping options.</div>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num">03</div>
+          <div class="step-title">Sample &amp; Approve</div>
+          <div class="step-desc">We produce a sample and ship it to you for testing on your heat press before the full order.</div>
+        </div>
+        <div class="step reveal reveal-delay-4">
+          <div class="step-num">04</div>
+          <div class="step-title">Production &amp; Ship</div>
+          <div class="step-desc">Once approved, we mass-produce and ship worldwide. Tracking provided for every order.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Social Proof -->
+  <section class="proof" id="reviews">
+    <div class="container">
+      <div class="proof-header reveal">
+        <span class="label">Client Feedback</span>
+        <h2 class="section-title">Trusted by Printers Worldwide</h2>
+      </div>
+      <div class="proof-grid">
+        <div class="proof-card reveal reveal-delay-1">
+          <div class="proof-stars">
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+          </div>
+          <p class="proof-text">"The coating quality is outstanding. We tested 3 suppliers before settling on AlumCraft. The ink adhesion is consistent batch after batch — exactly what we needed for our membership card line."</p>
+          <div class="proof-author">
+            <div class="proof-avatar">JM</div>
+            <div>
+              <div class="proof-name">James M.</div>
+              <div class="proof-role">Owner, PrintCraft Studio — USA</div>
+            </div>
+          </div>
+        </div>
+        <div class="proof-card reveal reveal-delay-2">
+          <div class="proof-stars">
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+          </div>
+          <p class="proof-text">"Custom shapes used to be a nightmare. AlumCraft took our PDF, cut the dies perfectly, and delivered flawless blanks in 5 days. The pet tag collection we launched exceeded our forecast by 40%."</p>
+          <div class="proof-author">
+            <div class="proof-avatar">SK</div>
+            <div>
+              <div class="proof-name">Sarah K.</div>
+              <div class="proof-role">Product Manager, PawPrint Co — UK</div>
+            </div>
+          </div>
+        </div>
+        <div class="proof-card reveal reveal-delay-3">
+          <div class="proof-stars">
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+          </div>
+          <p class="proof-text">"As a small sublimation business, finding a supplier with no high MOQ was tough. AlumCraft let me start with 20 pieces. Now I'm ordering 2,000 per month. Their pricing scales are incredibly fair."</p>
+          <div class="proof-author">
+            <div class="proof-avatar">TN</div>
+            <div>
+              <div class="proof-name">Thomas N.</div>
+              <div class="proof-role">Founder, NeonPrint Hub — Australia</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-wrapper">
+        <div class="reveal">
+          <span class="label">Get in Touch</span>
+          <h2 class="section-title">Let's Talk About Your Project</h2>
+          <p class="section-sub" style="margin-bottom: 48px;">Whether you need a sample, a quote, or just want to discuss your project — we respond within 24 hours.</p>
+
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="contact-detail-title">Email</div>
+              <div class="contact-detail-value">hello@alumcraft.com</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            </div>
+            <div>
+              <div class="contact-detail-title">Response Time</div>
+              <div class="contact-detail-value">Within 24 hours, Mon–Fri</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="contact-detail-title">Ships From</div>
+              <div class="contact-detail-value">China (Worldwide Shipping)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form reveal reveal-delay-2">
+          <form id="inquiry-form" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Your Name *</label>
+                <input type="text" class="form-input" placeholder="Full name" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Company (Optional)</label>
+                <input type="text" class="form-input" placeholder="Company name" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" class="form-input" placeholder="you@company.com" required />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Country</label>
+                <input type="text" class="form-input" placeholder="e.g. United States" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Product Interest</label>
+                <select class="form-select">
+                  <option value="">Select a product</option>
+                  <option>Standard CR80 Cards</option>
+                  <option>Custom Shape Blanks</option>
+                  <option>Metal Business Cards</option>
+                  <option>Specialty / Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Quantity Needed</label>
+              <input type="text" class="form-input" placeholder="e.g. 500 pcs" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Project Details *</label>
+              <textarea class="form-textarea" placeholder="Tell us about your project: size, shape, coating requirements, timeline, or any questions..." required></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Inquiry →</button>
+            <p style="font-size:0.75rem;color:var(--metal-dark);margin-top:12px;text-align:center;">We'll respond within 24 hours with a detailed quote.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-left">
+          <span>© 2026 <a href="#">AlumCraft</a>. Premium Aluminum Sublimation Blanks.</span>
+        </div>
+        <div class="footer-social">
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </a>
+          <a href="#" aria-label="Pinterest">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Inquiry Buttons -->
+  <div class="floating-bar">
+    <a href="mailto:hello@alumcraft.com" class="float-btn float-email" title="Send Email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </a>
+  </div>
+
+  <!-- Success Toast -->
+  <div id="toast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:#fafafa;padding:14px 28px;border-radius:8px;font-size:0.9rem;font-family:'Outfit',sans-serif;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);z-index:200;pointer-events:none;">Thank you! We'll be in touch within 24 hours.</div>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    reveals.forEach(el => observer.observe(el));
+
+    // Smooth nav
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 50) {
+        nav.style.padding = '14px 0';
+      } else {
+        nav.style.padding = '20px 0';
+      }
+    });
+
+    // Form submit
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('inquiry-form');
+      const btn = form.querySelector('.form-submit');
+      btn.textContent = 'Sending…';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.textContent = '✓ Sent Successfully!';
+        btn.style.background = '#4ade80';
+        btn.style.color = '#0d0d0d';
+        form.reset();
+
+        // Show toast
+        const toast = document.getElementById('toast');
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+        setTimeout(() => {
+          toast.style.transform = 'translateX(-50%) translateY(100px)';
+          btn.textContent = 'Send Inquiry →';
+          btn.style.background = '';
+          btn.style.color = '';
+          btn.style.opacity = '';
+          btn.disabled = false;
+        }, 3000);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>
