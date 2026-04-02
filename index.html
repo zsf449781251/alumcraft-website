@@ -1074,7 +1074,11 @@
         </div>
 
         <div class="contact-form reveal reveal-delay-2">
-          <form id="inquiry-form" onsubmit="handleSubmit(event)">
+          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+            <input type="hidden" name="form-name" value="inquiry" />
+            <p style="display:none;">
+              <label>Don't fill this out: <input name="bot-field" /></label>
+            </p>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Your Name *</label>
@@ -1188,7 +1192,12 @@
       btn.style.opacity = '0.7';
       btn.disabled = true;
 
-      setTimeout(() => {
+      // Send to Netlify Forms
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(new FormData(form)).toString()
+      }).then(() => {
         btn.textContent = '✓ Sent Successfully!';
         btn.style.background = '#4ade80';
         btn.style.color = '#0d0d0d';
@@ -1205,7 +1214,12 @@
           btn.style.opacity = '';
           btn.disabled = false;
         }, 3000);
-      }, 1200);
+      }).catch((err) => {
+        btn.textContent = 'Send Inquiry →';
+        btn.style.opacity = '';
+        btn.disabled = false;
+        alert('Submission failed. Please email us directly: zyh370048439@outlook.com');
+      });
     }
   </script>
 </body>
