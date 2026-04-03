@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlumCraft AI Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+    <!-- Header -->
+    <header class="chat-header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="ai-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="header-info">
+            <h1>AlumCraft Assistant</h1>
+            <span class="status-indicator">
+              <span class="status-dot"></span>
+              AI-Powered 24/7
+            </span>
+          </div>
+        </div>
+        <button class="clear-btn" onclick="clearChat()" title="Clear chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" id="chatMessages">
+      <!-- Welcome Message -->
+      <div class="message bot-message">
+        <div class="message-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="message-content">
+          <div class="message-text">
+            <p>Welcome to AlumCraft. I am Sam, your direct contact for sublimation aluminum blanks.</p>
+            <p>We are a professional Chinese manufacturer. Our products include standard cards (86×54mm), oversized cards (115×54mm), round blanks (70mm), and custom die-cut shapes.</p>
+            <p>Popular specs: 0.55mm thickness, white pearlescent aluminum, MOQ 500pcs for standard sizes.</p>
+            <p>Please feel free to ask about products, pricing, or your custom project requirements.</p>
+            <p><strong>How may I assist you today?</strong></p>
+          </div>
+          <div class="quick-actions">
+            <button onclick="sendQuickMessage('What sizes and thickness do you offer?')">View Products</button>
+            <button onclick="sendQuickMessage('What is the MOQ for standard size 86x54mm?')">Standard MOQ</button>
+            <button onclick="sendQuickMessage('I need a quote for 50,000 custom shaped pieces')">Custom Quote</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" id="typingIndicator" style="display: none;">
+      <div class="message bot-message">
+        <div class="message-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="message-content">
+          <div class="message-text typing">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <footer class="chat-input-area">
+      <div class="input-container">
+        <textarea 
+          id="userInput" 
+          placeholder="Type your message... (Enter to send, Shift+Enter for new line)"
+          rows="1"
+          onkeydown="handleKeyDown(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-footer">
+        <span class="powered-by">
+          Powered by AlumCraft AI · 
+          <a href="mailto:zyh370048439@outlook.com">Contact Us</a> · 
+          <a href="https://wa.me/+8615386201892" target="_blank">WhatsApp</a>
+        </span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="chat.js"></script>
+</body>
+</html>
