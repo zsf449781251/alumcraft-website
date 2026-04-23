@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 User-agent: *
 Allow: /
 
 Sitemap: https://magenta-fenglisu-70127f.netlify.app/sitemap.xml
+=======
+User-agent: *
+Allow: /
+
+Sitemap: https://magenta-fenglisu-70127f.netlify.app/sitemap.xml
+>>>>>>> bedc8a7002e474a4622836d4dc59f0ce2da0c13f
