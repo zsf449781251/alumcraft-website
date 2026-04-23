@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://magenta-fenglisu-70127f.netlify.app/sitemap.xml
