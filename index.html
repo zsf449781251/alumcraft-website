@@ -14,7 +14,7 @@
   <meta property="og:title" content="AlumCraft — Premium Aluminum Sublimation Blanks" />
   <meta property="og:description" content="Direct manufacturer of sublimation aluminum blanks. White pearlescent coating, custom shapes available. MOQ 500pcs, samples in 3–5 days." />
   <meta property="og:url" content="https://magenta-fenglisu-70127f.netlify.app/" />
-  <meta property="og:image" content="https://magenta-fenglisu-70127f.netlify.app/images/hero主图.png" />
+  <meta property="og:image" content="https://magenta-fenglisu-70127f.netlify.app/images/hero主图.webp" />
   <meta property="og:site_name" content="AlumCraft" />
   <meta property="og:locale" content="en_US" />
 
@@ -22,7 +22,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="AlumCraft — Premium Aluminum Sublimation Blanks" />
   <meta name="twitter:description" content="Direct manufacturer of sublimation aluminum blanks. MOQ 500pcs, samples in 3–5 days." />
-  <meta name="twitter:image" content="https://magenta-fenglisu-70127f.netlify.app/images/hero主图.png" />
+  <meta name="twitter:image" content="https://magenta-fenglisu-70127f.netlify.app/images/hero主图.webp" />
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://magenta-fenglisu-70127f.netlify.app/" />
@@ -35,7 +35,7 @@
     "name": "AlumCraft",
     "description": "Professional manufacturer of aluminum sublimation blanks, metal business cards, and custom-shaped aluminum pieces.",
     "url": "https://magenta-fenglisu-70127f.netlify.app/",
-    "logo": "https://magenta-fenglisu-70127f.netlify.app/images/hero主图.png",
+    "logo": "https://magenta-fenglisu-70127f.netlify.app/images/hero主图.webp",
     "contactPoint": {
       "@type": "ContactPoint",
       "email": "370048439@qq.com",
@@ -202,7 +202,7 @@
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('images/hero主图.png');
+      background-image: url('images/hero主图.webp');
       background-size: cover;
       background-position: center;
       opacity: 0.4;
@@ -756,6 +756,18 @@
     .float-whatsapp:hover { background: #1fb855; transform: scale(1.1); }
     .float-email { background: var(--text-primary); color: var(--bg-primary); }
     .float-email:hover { background: var(--metal-light); transform: scale(1.1); }
+
+    @media (max-width: 480px) {
+      .floating-bar {
+        flex-direction: row;
+        bottom: 16px;
+        right: 16px;
+      }
+      .float-btn {
+        width: 44px;
+        height: 44px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -763,7 +775,7 @@
   <!-- Nav -->
   <nav>
     <div class="container">
-      <a href="#" class="nav-logo">
+      <a href="index.html" class="nav-logo">
         <div class="nav-logo-mark">
           <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="2" y="5" width="14" height="8" rx="1.5" stroke="#0d0d0d" stroke-width="1.5"/>
@@ -843,7 +855,7 @@
       </div>
       <div class="product-grid">
         <div class="product-card card-type-1 reveal reveal-delay-1">
-          <div class="product-visual" style="background-image:url('images/CR80.png');background-size:cover;background-position:center;">
+          <div class="product-visual" style="background-image:url('images/CR80.webp');background-size:cover;background-position:center;">
           </div>
           <div class="product-info">
             <div class="product-category">Standard Cards</div>
@@ -858,7 +870,7 @@
         </div>
 
         <div class="product-card card-type-2 reveal reveal-delay-2">
-          <div class="product-visual" style="background-image:url('images/异形铝片组合.png');background-size:cover;background-position:center;">
+          <div class="product-visual" style="background-image:url('images/异形铝片组合.webp');background-size:cover;background-position:center;">
           </div>
           <div class="product-info">
             <div class="product-category">Custom Shapes</div>
@@ -873,7 +885,7 @@
         </div>
 
         <div class="product-card card-type-3 reveal reveal-delay-3">
-          <div class="product-visual" style="background-image:url('images/大尺寸卡.png');background-size:cover;background-position:center;">
+          <div class="product-visual" style="background-image:url('images/大尺寸卡.webp');background-size:cover;background-position:center;">
           </div>
           <div class="product-info">
             <div class="product-category">Large Format Cards</div>
@@ -888,7 +900,7 @@
         </div>
 
         <div class="product-card card-type-4 reveal reveal-delay-4">
-          <div class="product-visual" style="background-image:url('images/圆形铝片徽章.png');background-size:cover;background-position:center;">
+          <div class="product-visual" style="background-image:url('images/圆形铝片徽章.webp');background-size:cover;background-position:center;">
           </div>
           <div class="product-info">
             <div class="product-category">Specialty Blanks</div>
@@ -911,8 +923,8 @@
       <div class="cap-grid">
         <div class="cap-visual reveal">
           <div class="cap-mockup" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px;">
-            <img src="images/工厂 (1).png" alt="AlumCraft Manufacturing Facility" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
-            <img src="images/工厂 (2).png" alt="AlumCraft Production Line" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+            <img loading="lazy" decoding="async" src="images/工厂 (1).webp" alt="AlumCraft Manufacturing Facility" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+            <img loading="lazy" decoding="async" src="images/工厂 (2).webp" alt="AlumCraft Production Line" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
           </div>
         </div>
         <div class="reveal reveal-delay-2">
@@ -973,7 +985,7 @@
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px;">
         <div class="proof-card reveal reveal-delay-1" style="overflow: hidden; padding: 0;">
           <div style="height: 280px; overflow: hidden;">
-            <img src="images/金色名片成品.png" alt="Luxury Gold Metal Business Card" style="width: 100%; height: 100%; object-fit: cover;">
+            <img loading="lazy" decoding="async" src="images/金色名片成品.webp" alt="Luxury Gold Metal Business Card" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
           <div style="padding: 24px;">
             <div class="product-category">Business & Corporate</div>
@@ -983,7 +995,7 @@
         </div>
         <div class="proof-card reveal reveal-delay-2" style="overflow: hidden; padding: 0;">
           <div style="height: 280px; overflow: hidden;">
-            <img src="images/狗牌成品.png" alt="Custom Pet Tag" style="width: 100%; height: 100%; object-fit: cover;">
+            <img loading="lazy" decoding="async" src="images/狗牌成品.webp" alt="Custom Pet Tag" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
           <div style="padding: 24px;">
             <div class="product-category">Pet & Lifestyle</div>
@@ -1175,25 +1187,25 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Your Name *</label>
-                <input type="text" class="form-input" placeholder="Full name" required />
+                <input type="text" name="name" class="form-input" placeholder="Full name" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Company (Optional)</label>
-                <input type="text" class="form-input" placeholder="Company name" />
+                <input type="text" name="company" class="form-input" placeholder="Company name" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Email Address *</label>
-              <input type="email" class="form-input" placeholder="you@company.com" required />
+              <input type="email" name="email" class="form-input" placeholder="you@company.com" required />
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Country</label>
-                <input type="text" class="form-input" placeholder="e.g. United States" />
+                <input type="text" name="country" class="form-input" placeholder="e.g. United States" />
               </div>
               <div class="form-group">
                 <label class="form-label">Product Interest</label>
-                <select class="form-select">
+                <select name="product_interest" class="form-select">
                   <option value="">Select a product</option>
                   <option>Standard CR80 Cards</option>
                   <option>Custom Shape Blanks</option>
@@ -1204,11 +1216,11 @@
             </div>
             <div class="form-group">
               <label class="form-label">Quantity Needed</label>
-              <input type="text" class="form-input" placeholder="e.g. 500 pcs" />
+              <input type="text" name="quantity" class="form-input" placeholder="e.g. 500 pcs" />
             </div>
             <div class="form-group">
               <label class="form-label">Project Details *</label>
-              <textarea class="form-textarea" placeholder="Tell us about your project: size, shape, coating requirements, timeline, or any questions..." required></textarea>
+              <textarea name="message" class="form-textarea" placeholder="Tell us about your project: size, shape, coating requirements, timeline, or any questions..." required></textarea>
             </div>
             <button type="submit" class="form-submit">Send Inquiry →</button>
             <p style="font-size:0.75rem;color:var(--metal-dark);margin-top:12px;text-align:center;">We'll respond within 24 hours with a detailed quote.</p>
@@ -1245,7 +1257,7 @@
     <button onclick="toggleChat()" id="chat-toggle-btn" class="float-btn" style="background:#6366f1;color:white;" title="AI Customer Service (Lisa)">
       <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
     </button>
-    <a href="https://wa.me/+8615386201892" target="_blank" class="float-btn float-whatsapp" title="WhatsApp (International)" style="text-decoration:none;">
+    <a href="https://wa.me/+8615386201892" target="_blank" rel="noopener" class="float-btn float-whatsapp" title="WhatsApp (International)" style="text-decoration:none;">
       <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
     <a href="mailto:370048439@qq.com" class="float-btn float-email" title="Send Email">
@@ -1379,34 +1391,9 @@
     }
 
     // =========================================
-    // AI Chat Widget - Lisa's Customer Service
+    // Chat Widget - local product assistant
     // =========================================
-
-    // Configuration
-    const CHAT_API_KEY = 'sk-qcsxzrkpjuakiqctkplmuyfuhnzmxmikaemguzswokbjeerx';
-    const CHAT_API_URL = 'https://api.siliconflow.cn/v1';
-    const CHAT_MODEL = 'Qwen/Qwen2.5-72B-Instruct';
-
-    const CHAT_SYSTEM_PROMPT = `You are Lisa, the sales manager of AlumCraft — a professional Chinese manufacturer specializing in high-quality sublimation aluminum blanks for the global sublimation industry.
-
-PERSONALITY:
-- Professional, knowledgeable, and reliable
-- Serious but approachable
-- Speaks with authority and confidence
-- No small talk, always on-point
-
-PRODUCT RANGE:
-1. Standard CR80 Cards (86×54mm) - Thickness: 0.55mm, MOQ: 500 pieces
-2. Oversized Cards (115×54mm) - Thickness: 0.55mm, MOQ: 500 pieces
-3. Round Blanks (70mm diameter) - Thickness: 0.55mm, MOQ: 500 pieces
-4. Custom Die-Cut Shapes - MOQ: 50,000 pieces, mold cost ¥3,000+
-
-PRICING: We do NOT negotiate pricing in chat. Send formal inquiry for quotes.
-Sample lead time: 3-5 business days
-
-Always respond in English with a professional tone. Guide serious inquiries to contact: 370048439@qq.com`;
-
-    let chatHistory = [{ role: 'system', content: CHAT_SYSTEM_PROMPT }];
+    const CHAT_CONTACT = 'Email: 370048439@qq.com\nWhatsApp: +86 153 8620 1892';
     let chatOpen = false;
     let chatInitialized = false;
 
@@ -1422,20 +1409,24 @@ Always respond in English with a professional tone. Guide serious inquiries to c
 
     function initChat() {
       const messagesEl = document.getElementById('chat-messages');
-      messagesEl.innerHTML = `
-        <div class="chat-msg bot">
-          <strong>Lisa from AlumCraft</strong><br><br>
-          Hello! I'm Lisa, your sales manager at AlumCraft. We are a professional Chinese manufacturer of sublimation aluminum blanks.<br><br>
-          How may I assist you today?
-        </div>
-      `;
+      messagesEl.innerHTML = '';
+      addChatMessage(
+        'Lisa from AlumCraft\n\nHello! I can help with common questions about MOQ, thickness, samples, custom shapes, and quotes. For a formal quote, please send your size, thickness, quantity, destination country, and timeline.\n\n' + CHAT_CONTACT,
+        false
+      );
+    }
+
+    function escapeHTML(value) {
+      return value.replace(/[&<>'"]/g, char => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[char]));
     }
 
     function addChatMessage(content, isUser) {
       const messagesEl = document.getElementById('chat-messages');
       const msgDiv = document.createElement('div');
       msgDiv.className = 'chat-msg ' + (isUser ? 'user' : 'bot');
-      msgDiv.innerHTML = content.replace(/\n/g, '<br>');
+      msgDiv.innerHTML = escapeHTML(content).replace(/\n/g, '<br>');
       messagesEl.appendChild(msgDiv);
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -1444,7 +1435,30 @@ Always respond in English with a professional tone. Guide serious inquiries to c
       document.getElementById('chat-typing').classList.toggle('show', show);
     }
 
-    async function sendMessage() {
+    function getChatReply(message) {
+      const text = message.toLowerCase();
+      if (text.includes('moq') || text.includes('minimum')) {
+        return 'Standard shapes such as CR80 cards, oversized cards, and round blanks usually start from 500 pcs. Custom die-cut shapes usually start from 50,000 pcs because a mold is required.\n\nFor a quote, send size, thickness, quantity, and destination country.\n' + CHAT_CONTACT;
+      }
+      if (text.includes('thick') || text.includes('0.55') || text.includes('0.30') || text.includes('0.22')) {
+        return 'Common thickness options include 0.22mm, 0.30mm, 0.40mm, 0.50mm, and 0.55mm. 0.55mm is the most popular for business cards, membership cards, and badges because it feels rigid and premium.';
+      }
+      if (text.includes('sample')) {
+        return 'Samples for standard sizes are available. Typical sample preparation is 3-5 business days, then shipping time depends on destination and shipping method.\n\nPlease email your required size, thickness, and quantity to 370048439@qq.com.';
+      }
+      if (text.includes('custom') || text.includes('shape') || text.includes('die')) {
+        return 'Yes, we can make custom die-cut aluminum blanks from vector files such as DXF, AI, CDR, EPS, or PDF. Custom shapes require mold making and usually start from 50,000 pcs. Mold cost depends on shape complexity.';
+      }
+      if (text.includes('price') || text.includes('quote') || text.includes('cost')) {
+        return 'To quote accurately, we need: size, thickness, coating/surface requirement, quantity, destination country, and whether it is a standard or custom shape.\n\nSend the details to 370048439@qq.com and we will reply with pricing, lead time, and shipping options.';
+      }
+      if (text.includes('ship') || text.includes('delivery') || text.includes('lead time')) {
+        return 'We ship worldwide from China. Samples are usually prepared in 3-5 business days. Bulk production timing depends on quantity and whether a custom mold is needed. Air express and sea freight are both available.';
+      }
+      return 'Thanks for your message. For the fastest help, please share your product type, size, thickness, quantity, destination country, and timeline.\n\n' + CHAT_CONTACT;
+    }
+
+    function sendMessage() {
       const input = document.getElementById('chat-input');
       const sendBtn = document.getElementById('chat-send');
       const message = input.value.trim();
@@ -1453,37 +1467,14 @@ Always respond in English with a professional tone. Guide serious inquiries to c
       input.value = '';
       sendBtn.disabled = true;
       addChatMessage(message, true);
-      chatHistory.push({ role: 'user', content: message });
       showChatTyping(true);
 
-      try {
-        const response = await fetch(`${CHAT_API_URL}/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${CHAT_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: CHAT_MODEL,
-            messages: chatHistory.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content })),
-            stream: false,
-            temperature: 0.7,
-            max_tokens: 1000
-          })
-        });
-
-        if (!response.ok) throw new Error('API error');
-        const data = await response.json();
-        const reply = data.choices[0].message.content;
-        addChatMessage(reply, false);
-        chatHistory.push({ role: 'assistant', content: reply });
-      } catch (error) {
-        addChatMessage('<strong>Connection Error</strong><br><br>Unable to connect. Please contact us directly:<br>📧 370048439@qq.com<br>📱 +86 15386201892', false);
-      } finally {
+      window.setTimeout(() => {
+        addChatMessage(getChatReply(message), false);
         showChatTyping(false);
         sendBtn.disabled = false;
         input.focus();
-      }
+      }, 250);
     }
 
     function sendSuggestion(text) {
