@@ -15,7 +15,7 @@ The chatbot is now a static product assistant. It does not call a third-party AP
 
 All serious inquiries are directed to:
 
-- Email: 370048439@qq.com
+- Email: znegshifan@yushiglobal.cn
 - WhatsApp: +86 153 8620 1892
 
 ## If You Want Real AI Later

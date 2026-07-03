@@ -66,7 +66,7 @@
   ```
   Premium Aluminum Sublimation Blanks Manufacturer 🏭
   Direct from factory | Free samples | MOQ 500pcs
-  📧 370048439@qq.com
+  📧 znegshifan@yushiglobal.cn
   📱 WhatsApp: +86 153 8620 1892
   🔗 Website in bio
   ```

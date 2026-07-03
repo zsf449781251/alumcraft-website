@@ -3,7 +3,7 @@
  * Static, no external API key exposed in the browser.
  */
 
-const CONTACT_INFO = 'Email: 370048439@qq.com\nWhatsApp: +86 153 8620 1892';
+const CONTACT_INFO = 'Email: znegshifan@yushiglobal.cn\nWhatsApp: +86 153 8620 1892';
 
 let isGenerating = false;
 
@@ -87,7 +87,7 @@ function buildLocalResponse(message) {
   }
 
   if (text.includes('sample')) {
-    return 'Samples for standard sizes are available. Typical sample preparation is 3-5 business days, then shipping time depends on destination and shipping method.\n\nPlease email your required size, thickness, quantity, and destination country to 370048439@qq.com.';
+    return 'Samples for standard sizes are available. Typical sample preparation is 3-5 business days, then shipping time depends on destination and shipping method.\n\nPlease email your required size, thickness, quantity, and destination country to znegshifan@yushiglobal.cn.';
   }
 
   if (text.includes('custom') || text.includes('shape') || text.includes('die')) {
@@ -95,7 +95,7 @@ function buildLocalResponse(message) {
   }
 
   if (text.includes('price') || text.includes('quote') || text.includes('cost')) {
-    return 'To quote accurately, we need size, thickness, coating or surface requirement, quantity, destination country, and whether the shape is standard or custom.\n\nSend those details to 370048439@qq.com and we will reply with pricing, lead time, and shipping options.';
+    return 'To quote accurately, we need size, thickness, coating or surface requirement, quantity, destination country, and whether the shape is standard or custom.\n\nSend those details to znegshifan@yushiglobal.cn and we will reply with pricing, lead time, and shipping options.';
   }
 
   if (text.includes('ship') || text.includes('delivery') || text.includes('lead time')) {
