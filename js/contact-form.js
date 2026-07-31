@@ -51,9 +51,9 @@
 
     window.clearTimeout(toastTimer);
     toast.textContent = message;
-    toast.style.transform = 'translateX(-50%) translateY(0)';
+    toast.classList.add('is-visible');
     toastTimer = window.setTimeout(() => {
-      toast.style.transform = 'translateX(-50%) translateY(100px)';
+      toast.classList.remove('is-visible');
     }, 4500);
   }
 
@@ -140,7 +140,18 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('inquiry-form');
-    if (!form || isNetlifyRuntime()) return;
+    if (!form) return;
+
+    const productSelect = form.querySelector('[name="product_interest"]');
+    if (productSelect) {
+      document.querySelectorAll('[data-product-interest]').forEach((link) => {
+        link.addEventListener('click', () => {
+          productSelect.value = link.dataset.productInterest || '';
+        });
+      });
+    }
+
+    if (isNetlifyRuntime()) return;
 
     const note = document.getElementById('form-delivery-note');
     if (note) note.textContent = getCopy().emailNote;

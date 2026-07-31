@@ -5,7 +5,7 @@
   --bg-card-hover: #202020;
   --metal-light: #d4d4d8;
   --metal-mid: #a1a1aa;
-  --metal-dark: #71717a;
+  --metal-dark: #85858f;
   --accent: #e4e4e7;
   --border: rgba(255,255,255,0.07);
   --border-hover: rgba(255,255,255,0.15);
@@ -19,6 +19,7 @@
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:focus-visible { outline: 3px solid var(--text-primary); outline-offset: 3px; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
   background: var(--bg-primary);
@@ -72,7 +73,7 @@ nav .container { display: flex; align-items: center; justify-content: space-betw
 }
 .blog-meta {
   display: flex; gap: 20px; align-items: center;
-  font-size: 0.8rem; color: var(--metal-dark); margin-bottom: 40px;
+  font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 40px;
 }
 .blog-meta span { display: flex; align-items: center; gap: 6px; }
 
@@ -119,7 +120,7 @@ footer {
 .footer-content {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
 }
-.footer-left { font-size: 0.8rem; color: var(--metal-dark); }
+.footer-left { font-size: 0.8rem; color: var(--text-secondary); }
 .footer-left a { color: var(--metal-mid); text-decoration: none; }
 .footer-left a:hover { color: var(--text-primary); }
 
@@ -146,25 +147,7 @@ footer {
   .floating-bar { flex-direction: row; bottom: 16px; right: 16px; }
   .float-btn { width: 44px; height: 44px; }
 }
-:root {
-  --bg-primary: #0d0d0d;
-  --bg-secondary: #141414;
-  --bg-card: #1a1a1a;
-  --bg-card-hover: #202020;
-  --metal-light: #d4d4d8;
-  --metal-mid: #a1a1aa;
-  --metal-dark: #71717a;
-  --accent: #e4e4e7;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(255,255,255,0.15);
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --font-body: 'Outfit', sans-serif;
-  --font-mono: 'Space Mono', monospace;
-  --radius: 4px;
-  --radius-lg: 8px;
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
