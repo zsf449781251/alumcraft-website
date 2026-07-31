@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://magenta-fenglisu-70127f.netlify.app/sitemap.xml
+Sitemap: https://9gygp5h788.coze.site/sitemap.xml
