@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d0d0d" />
   <title>Întrebări frecvente — Semifabricate din aluminiu pentru sublimare | AlumCraft</title>
   <meta name="description" content="Răspunsuri despre comenzi, MOQ, prețuri, grosimi, calitatea acoperirii, mostre și livrare pentru semifabricatele din aluminiu acoperit. En-gros și OEM pentru distribuitori și tipografii." />
   <meta name="keywords" content="aluminum sublimation blanks FAQ, sublimation blank MOQ, metal card thickness, sublimation coating quality, custom die-cut aluminum, heat press aluminum FAQ" />
@@ -18,6 +19,7 @@
 
   <!-- Canonical -->
   <link rel="canonical" href="https://9gygp5h788.coze.site/ro/faq.html" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 
   <!-- FAQ Schema Markup -->
   <script type="application/ld+json">
@@ -70,7 +72,7 @@
       "name": "Ce dimensiuni standard oferiți?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Dimensiunile standard includ: carduri CR80 (86×54 mm), carduri supradimensionate (115×54 mm), carduri 100×40 mm și semifabricate rotunde (diametru 70 mm). Putem produce și dimensiuni personalizate pentru comenzi de peste 500 de bucăți."
+        "text": "Dimensiunile standard includ: carduri CR80 (86×54 mm), carduri supradimensionate (115×54 mm), carduri 100×40 mm și semifabricate rotunde (diametru 70 mm). Dimensiunile personalizate care nu necesită o matriță dedicată sunt disponibile de la 500 de bucăți; formele noi ștanțate pornesc, de regulă, de la 50.000 de bucăți plus costul matriței."
       }
     },
     {
@@ -143,7 +145,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" /></noscript>
 
   <style>
     :root {
@@ -153,7 +156,7 @@
       --bg-card-hover: #202020;
       --metal-light: #d4d4d8;
       --metal-mid: #a1a1aa;
-      --metal-dark: #71717a;
+      --metal-dark: #85858f;
       --accent: #e4e4e7;
       --border: rgba(255,255,255,0.07);
       --border-hover: rgba(255,255,255,0.15);
@@ -167,6 +170,7 @@
       --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :focus-visible { outline: 3px solid var(--text-primary); outline-offset: 3px; }
     html { scroll-behavior: smooth; font-size: 16px; }
     body {
       background: var(--bg-primary);
@@ -246,9 +250,17 @@
       padding: 20px 24px; cursor: pointer;
       background: var(--bg-card);
       transition: var(--transition);
+      width: 100%; margin: 0; border: 0;
+      color: inherit; font: inherit; text-align: left;
+      -webkit-appearance: none; appearance: none;
     }
     .faq-question:hover { background: var(--bg-card-hover); }
-    .faq-question h3 { font-size: 1rem; font-weight: 500; color: var(--text-primary); line-height: 1.4; flex: 1; }
+    .faq-question:focus-visible {
+      outline: 2px solid var(--metal-light);
+      outline-offset: -3px;
+    }
+    .faq-heading { margin: 0; font: inherit; }
+    .faq-question-text { font-size: 1rem; font-weight: 500; color: var(--text-primary); line-height: 1.4; flex: 1; }
     .faq-icon {
       width: 24px; height: 24px; flex-shrink: 0; margin-left: 16px;
       display: flex; align-items: center; justify-content: center;
@@ -263,6 +275,7 @@
     .faq-answer-inner {
       padding: 0 24px 20px;
       font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;
+      overflow-wrap: anywhere;
     }
 
     /* Contact Banner */
@@ -311,6 +324,23 @@
       .floating-bar { flex-direction: row; bottom: 16px; right: 16px; }
       .float-btn { width: 44px; height: 44px; }
     }
+    @media (max-width: 480px) {
+      nav { padding: 14px 0; }
+      nav .container { padding: 0 16px; gap: 10px; }
+      .nav-logo { flex: 0 0 auto; }
+      .nav-logo-text { display: none; }
+      nav .lang-switch { gap: 0 !important; }
+      nav .lang-switch a { padding: 3px 6px !important; }
+      .nav-back {
+        flex: 0 0 36px; width: 36px; height: 36px;
+        display: inline-flex; align-items: center; justify-content: center;
+        overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius);
+        font-size: 0;
+      }
+      .nav-back::before { content: '\2190'; font-size: 1rem; line-height: 1; }
+      .faq-question { padding: 18px 16px; }
+      .faq-answer-inner { padding: 0 16px 18px; }
+    }
   </style>
   <link rel="alternate" hreflang="en" href="https://9gygp5h788.coze.site/faq.html" />
   <link rel="alternate" hreflang="ro" href="https://9gygp5h788.coze.site/ro/faq.html" />
@@ -333,7 +363,7 @@
         <span class="nav-logo-text">AlumCraft</span>
       </a>
       <div class="lang-switch" style="display:flex;gap:4px;align-items:center;font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;"><a href="../faq.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">EN</a><a href="faq.html" style="color:#fafafa;border:1px solid rgba(255,255,255,0.35);text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">RO</a><a href="../pl/faq.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">PL</a></div>
-      <a href="index.html" class="nav-back">← Înapoi la pagina principală</a>
+      <a href="index.html" class="nav-back" aria-label="Înapoi la pagina principală">← Înapoi la pagina principală</a>
     </div>
   </nav>
 
@@ -353,176 +383,204 @@
   <section class="faq-section">
     <div class="container">
 
-      <div class="faq-category">Comenzi & Prețuri</div>
+      <h2 class="faq-category">Comenzi & Prețuri</h2>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Care este MOQ-ul pentru semifabricatele din aluminiu pentru sublimare?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-01" aria-expanded="false" aria-controls="faq-answer-01" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Care este MOQ-ul pentru semifabricatele din aluminiu pentru sublimare?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-01" role="region" aria-labelledby="faq-question-01" aria-hidden="true">
           <div class="faq-answer-inner">
             Pentru formele standard (CR80, supradimensionate, rotunde), MOQ-ul este de 500 de bucăți. Pentru testare, acceptăm comenzi de la 10 bucăți. Formele ștanțate la comandă necesită o comandă minimă de 50.000 de bucăți, plus costul matriței, începând de la ¥3,000.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Cum plasez o comandă și obțin o ofertă de preț?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-02" aria-expanded="false" aria-controls="faq-answer-02" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Cum plasez o comandă și obțin o ofertă de preț?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-02" role="region" aria-labelledby="faq-question-02" aria-hidden="true">
           <div class="faq-answer-inner">
             Trimiteți-ne cerințele (dimensiune, grosime, cantitate, tip de acoperire) prin e-mail la znegshifan@yushiglobal.cn, pe WhatsApp sau prin formularul de contact. Răspundem cu o ofertă detaliată în 24 de ore, incluzând prețul, termenul de livrare și opțiunile de transport.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Prețurile includ transportul?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-03" aria-expanded="false" aria-controls="faq-answer-03" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Prețurile includ transportul?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-03" role="region" aria-labelledby="faq-question-03" aria-hidden="true">
           <div class="faq-answer-inner">
             Prețurile noastre sunt de regulă FOB (Free on Board) — acoperă producția și livrarea până în port. Transportul se cotează separat, în funcție de metoda preferată (maritim sau aerian) și de destinație. Colaborăm cu expeditori de încredere pentru a vă oferi tarife de transport competitive.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Ce metode de plată acceptați?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-04" aria-expanded="false" aria-controls="faq-answer-04" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Ce metode de plată acceptați?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-04" role="region" aria-labelledby="faq-question-04" aria-hidden="true">
           <div class="faq-answer-inner">
             Acceptăm T/T (transfer bancar), PayPal și Western Union. Pentru prima comandă, solicităm de regulă un avans de 30%, cu restul plătit înainte de expediere. Clienții pe termen lung pot negocia alte condiții de plată.
           </div>
         </div>
       </div>
 
-      <div class="faq-category">Produse & Specificații</div>
+      <h2 class="faq-category">Produse & Specificații</h2>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Ce opțiuni de grosime sunt disponibile?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-05" aria-expanded="false" aria-controls="faq-answer-05" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Ce opțiuni de grosime sunt disponibile?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-05" role="region" aria-labelledby="faq-question-05" aria-hidden="true">
           <div class="faq-answer-inner">
             Oferim semifabricate din aluminiu în grosimi de 0,22 mm, 0,30 mm, 0,40 mm, 0,50 mm și 0,55 mm. Cea mai populară grosime este 0,55 mm, pentru cărți de vizită și ecusoane. Opțiunile mai subțiri (0,22–0,30 mm) sunt ideale pentru aplicații flexibile, precum semnele de carte și etichetele.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Ce dimensiuni standard oferiți?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-06" aria-expanded="false" aria-controls="faq-answer-06" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Ce dimensiuni standard oferiți?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-06" role="region" aria-labelledby="faq-question-06" aria-hidden="true">
           <div class="faq-answer-inner">
-            Dimensiunile standard includ: carduri CR80 (86×54 mm), carduri supradimensionate (115×54 mm), carduri 100×40 mm și semifabricate rotunde (diametru 70 mm). Putem produce și dimensiuni personalizate pentru comenzi de peste 500 de bucăți.
+            Dimensiunile standard includ: carduri CR80 (86×54 mm), carduri supradimensionate (115×54 mm), carduri 100×40 mm și semifabricate rotunde (diametru 70 mm). Dimensiunile personalizate care nu necesită o matriță dedicată sunt disponibile de la 500 de bucăți; formele noi ștanțate pornesc, de regulă, de la 50.000 de bucăți plus costul matriței.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Care este diferența dintre grosimea de 0,55 mm și cea de 0,30 mm?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-07" aria-expanded="false" aria-controls="faq-answer-07" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Care este diferența dintre grosimea de 0,55 mm și cea de 0,30 mm?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-07" role="region" aria-labelledby="faq-question-07" aria-hidden="true">
           <div class="faq-answer-inner">
             0,55 mm este grosimea standard a unui card de credit CR80 — rigidă și durabilă, ideală pentru cărți de vizită, carduri de membru și ecusoane. 0,30 mm este flexibilă și mai subțire, potrivită pentru etichete, semne de carte și aplicații ușoare, unde se dorește o anumită flexibilitate.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Puteți produce forme ștanțate la comandă?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-08" aria-expanded="false" aria-controls="faq-answer-08" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Puteți produce forme ștanțate la comandă?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-08" role="region" aria-labelledby="faq-question-08" aria-hidden="true">
           <div class="faq-answer-inner">
             Da! Producem forme personalizate din fișierele dumneavoastră vectoriale (DXF, AI, CDR, EPS, PDF). Costul matriței începe de la ¥3,000 (aproximativ $420 USD). MOQ-ul pentru formele personalizate este de 50.000 de bucăți. Ne ocupăm intern de prototipare, realizarea matrițelor și producția de serie.
           </div>
         </div>
       </div>
 
-      <div class="faq-category">Calitate & Acoperire</div>
+      <h2 class="faq-category">Calitate & Acoperire</h2>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Cum asigurați calitatea acoperirii?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-09" aria-expanded="false" aria-controls="faq-answer-09" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Cum asigurați calitatea acoperirii?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-09" role="region" aria-labelledby="faq-question-09" aria-hidden="true">
           <div class="faq-answer-inner">
             Fiecare lot de producție este supus testării aderenței. Verificăm rezistența la exfoliere, calitatea transferului de culoare și uniformitatea suprafeței. Acoperirea noastră pentru sublimare este formulată special pentru aplicații cu presă termică — fără umbre, fără exfoliere, reproducere vibrantă a culorilor.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Există bavuri pe marginile semifabricatelor ștanțate?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-10" aria-expanded="false" aria-controls="faq-answer-10" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Există bavuri pe marginile semifabricatelor ștanțate?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-10" role="region" aria-labelledby="faq-question-10" aria-hidden="true">
           <div class="faq-answer-inner">
             Partea din față a tuturor semifabricatelor este complet fără bavuri. Pe partea din spate pot exista bavuri minime, din cauza procesului de ștanțare. Ne șlefuim matrițele regulat, după fiecare lot, pentru a menține bavurile la minimum absolut.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Ce setări pentru presa termică recomandați?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-11" aria-expanded="false" aria-controls="faq-answer-11" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Ce setări pentru presa termică recomandați?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-11" role="region" aria-labelledby="faq-question-11" aria-hidden="true">
           <div class="faq-answer-inner">
             Deși setările variază în funcție de modelul presei, un punct de plecare general este: 180–200°C (356–392°F) timp de 60–90 de secunde, cu presiune medie. Recomandăm întotdeauna să testați mai întâi pe mostre, pentru a stabili setările perfecte pentru echipamentul dumneavoastră.
           </div>
         </div>
       </div>
 
-      <div class="faq-category">Mostre & Livrare</div>
+      <h2 class="faq-category">Mostre & Livrare</h2>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Oferiți mostre gratuite?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-12" aria-expanded="false" aria-controls="faq-answer-12" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Oferiți mostre gratuite?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-12" role="region" aria-labelledby="faq-question-12" aria-hidden="true">
           <div class="faq-answer-inner">
             Da! Oferim mostre gratuite pentru dimensiunile standard. Mostrele se expediază în 3–5 zile lucrătoare. Pentru formele personalizate se poate aplica o taxă de mostră, care se deduce integral din prima comandă de producție. Contactați-ne pentru a solicita mostre.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Cât durează producția?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-13" aria-expanded="false" aria-controls="faq-answer-13" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Cât durează producția?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-13" role="region" aria-labelledby="faq-question-13" aria-hidden="true">
           <div class="faq-answer-inner">
             <strong>Mostre:</strong> 3–5 zile lucrătoare<br><strong>Comenzi standard (1K–10K):</strong> 7–15 zile lucrătoare<br><strong>Comenzi mari (50K+):</strong> 20–30 zile lucrătoare<br><br>Durata exactă depinde de mărimea comenzii, de specificații și de programul de producție curent. Oferim o dată estimată de livrare cu fiecare ofertă.
           </div>
         </div>
       </div>
 
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">
-          <h3>Livrați internațional?</h3>
-          <div class="faq-icon">+</div>
-        </div>
-        <div class="faq-answer">
+      <div class="faq-item">
+        <h3 class="faq-heading">
+          <button type="button" class="faq-question" id="faq-question-14" aria-expanded="false" aria-controls="faq-answer-14" onclick="toggleFaq(this)">
+            <span class="faq-question-text">Livrați internațional?</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+        </h3>
+        <div class="faq-answer" id="faq-answer-14" role="region" aria-labelledby="faq-question-14" aria-hidden="true">
           <div class="faq-answer-inner">
             Da, livrăm în toată lumea. Opțiunile de transport includ transportul maritim (cel mai rentabil pentru comenzi mari) și curieratul aerian (mai rapid, pentru comenzi urgente sau mostre). Oferim urmărire completă pentru fiecare expediere.
           </div>
@@ -552,17 +610,23 @@
 
   <!-- Floating Buttons -->
   <div class="floating-bar">
-    <a href="https://wa.me/+8615386201892" target="_blank" rel="noopener" class="float-btn float-whatsapp" title="WhatsApp (International)" style="text-decoration:none;">
+    <a href="https://wa.me/+8615386201892" target="_blank" rel="noopener" class="float-btn float-whatsapp" title="WhatsApp (internațional)" aria-label="Contactați AlumCraft pe WhatsApp" style="text-decoration:none;">
       <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
-    <a href="mailto:znegshifan@yushiglobal.cn" class="float-btn float-email" title="Send Email">
+    <a href="mailto:znegshifan@yushiglobal.cn" class="float-btn float-email" title="Trimiteți un e-mail" aria-label="Trimiteți un e-mail echipei de vânzări AlumCraft">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </a>
   </div>
 
   <script>
-    function toggleFaq(item) {
-      item.classList.toggle('open');
+    function toggleFaq(button) {
+      const item = button.closest('.faq-item');
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      const willOpen = button.getAttribute('aria-expanded') !== 'true';
+
+      item.classList.toggle('open', willOpen);
+      button.setAttribute('aria-expanded', String(willOpen));
+      answer.setAttribute('aria-hidden', String(!willOpen));
     }
   </script>
 </body>

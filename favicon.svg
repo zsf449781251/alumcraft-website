@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AlumCraft">
+  <defs>
+    <linearGradient id="metal" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fafafa"/>
+      <stop offset="1" stop-color="#71717a"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0d0d0d"/>
+  <rect x="10" y="19" width="44" height="30" rx="6" fill="url(#metal)"/>
+  <path d="M23 19v-3a7 7 0 0 1 14 0v3" fill="none" stroke="#0d0d0d" stroke-width="4" stroke-linecap="round"/>
+  <path d="M20 34h8m8 0h8" fill="none" stroke="#0d0d0d" stroke-width="4" stroke-linecap="round"/>
+</svg>

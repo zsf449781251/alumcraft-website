@@ -26,6 +26,9 @@
 
   <!-- Canonical URL -->
   <link rel="canonical" href="https://9gygp5h788.coze.site/" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <meta name="theme-color" content="#0d0d0d" />
+  <link rel="preload" as="image" href="images/hero-main.webp" type="image/webp" fetchpriority="high" />
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
@@ -41,7 +44,7 @@
       "email": "znegshifan@yushiglobal.cn",
       "telephone": "+86-153-8620-1892",
       "contactType": "sales",
-      "availableLanguage": ["English", "Chinese"]
+      "availableLanguage": ["English", "Romanian", "Polish"]
     },
     "areaServed": "Worldwide"
   }
@@ -49,7 +52,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" /></noscript>
+  <link rel="preload" as="style" href="css/home-chat.css" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="css/home-chat.css" /></noscript>
 
   <style>
     :root {
@@ -59,7 +65,7 @@
       --bg-card-hover: #202020;
       --metal-light: #d4d4d8;
       --metal-mid: #a1a1aa;
-      --metal-dark: #71717a;
+      --metal-dark: #85858f;
       --accent: #e4e4e7;
       --accent-warm: #fafafa;
       --border: rgba(255,255,255,0.07);
@@ -85,6 +91,15 @@
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid #fafafa;
+      outline-offset: 3px;
     }
 
     ::selection { background: rgba(212, 212, 216, 0.2); color: var(--text-primary); }
@@ -138,6 +153,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 24px;
+      position: relative;
     }
     .nav-logo {
       display: flex;
@@ -159,7 +176,7 @@
       font-weight: 700;
       letter-spacing: 0.05em;
     }
-    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a {
       text-decoration: none;
       color: var(--text-secondary);
@@ -178,6 +195,22 @@
       transition: var(--transition);
     }
     .nav-links a:hover::after { width: 100%; }
+    .nav-actions { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+    .mobile-menu-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius);
+      cursor: pointer;
+    }
+    .mobile-menu-toggle svg { width: 20px; height: 20px; }
+    .mobile-language-switch { display: none; }
+    .nav-cta-label-mobile { display: none; }
     .nav-cta {
       background: var(--text-primary);
       color: var(--bg-primary);
@@ -337,12 +370,15 @@
       gap: 24px;
     }
     .product-card {
+      display: block;
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       overflow: hidden;
       transition: var(--transition);
       cursor: pointer;
+      color: inherit;
+      text-decoration: none;
     }
     .product-card:hover {
       border-color: var(--border-hover);
@@ -356,6 +392,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .product-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .product-visual-bg {
       position: absolute;
@@ -428,6 +470,14 @@
       margin-bottom: 16px;
     }
     .product-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .product-link {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 18px;
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
     .tag {
       font-size: 0.7rem;
       color: var(--metal-mid);
@@ -681,30 +731,20 @@
       flex-wrap: wrap;
       gap: 16px;
     }
-    .footer-left { font-size: 0.8rem; color: var(--metal-dark); }
+    .footer-left { font-size: 0.8rem; color: var(--metal-mid); }
     .footer-left a { color: var(--metal-mid); text-decoration: none; }
     .footer-left a:hover { color: var(--text-primary); }
-    .footer-social { display: flex; gap: 16px; }
-    .footer-social a {
-      width: 36px; height: 36px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--metal-mid);
-      text-decoration: none;
-      transition: var(--transition);
-    }
-    .footer-social a:hover { background: rgba(255,255,255,0.08); color: var(--text-primary); }
-    .footer-social svg { width: 16px; height: 16px; }
-
     /* ─── Animations ─── */
     .reveal {
-      opacity: 0;
-      transform: translateY(30px);
+      opacity: 1;
+      transform: translateY(0);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .reveal.visible {
+    .reveal.reveal-pending {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .reveal.reveal-pending.visible {
       opacity: 1;
       transform: translateY(0);
     }
@@ -716,22 +756,82 @@
     /* ─── Blog Cards ─── */
     #blog a:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); }
 
-    /* ─── Mobile ─── */
+    /* ─── Mobile navigation ─── */
+    @media (max-width: 960px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: calc(100% + 20px);
+        left: 24px;
+        right: 24px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 12px;
+        background: rgba(20,20,20,0.98);
+        border: 1px solid var(--border-hover);
+        border-radius: 12px;
+        box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+        max-height: calc(100vh - 96px);
+        overflow-y: auto;
+      }
+      .nav-links.is-open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a { display: block; padding: 11px 12px; color: var(--text-primary); }
+      .nav-links a::after { display: none; }
+      .mobile-language-switch {
+        display: flex;
+        gap: 8px;
+        padding: 12px;
+        margin-top: 6px;
+        border-top: 1px solid var(--border);
+      }
+      .mobile-language-switch a {
+        width: auto;
+        padding: 6px 10px;
+        border: 1px solid var(--border-hover);
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+      }
+      .nav-actions > .lang-switch { display: none !important; }
+      .mobile-menu-toggle { display: inline-flex; }
+      .nav-cta-label-desktop { display: none; }
+      .nav-cta-label-mobile { display: inline; }
+      .nav-cta { padding: 8px 14px; white-space: nowrap; }
+    }
+
+    /* ─── Mobile content ─── */
     @media (max-width: 768px) {
-      .nav-links { display: none; }
       .cap-grid, .contact-wrapper { grid-template-columns: 1fr; gap: 48px; }
+      .application-showcase-grid { grid-template-columns: minmax(0, 1fr) !important; }
       .cap-visual { order: -1; }
       .process-steps { grid-template-columns: 1fr 1fr; gap: 40px; }
       .process-steps::before { display: none; }
       .hero-stats { gap: 32px; }
       .form-row { grid-template-columns: 1fr; }
-      .hero { min-height: auto; padding: 120px 0 60px; }
+      .hero { min-height: auto; padding: 112px 0 60px; }
     }
 
     @media (max-width: 480px) {
+      .container { padding-left: 16px; padding-right: 16px; }
+      .nav-links { left: 16px; right: 16px; top: calc(100% + 18px); }
+      .nav-logo { gap: 8px; }
+      .nav-logo-mark { width: 30px; height: 30px; }
+      .nav-logo-text { font-size: 0.82rem; }
+      .nav-actions { gap: 8px; }
+      .nav-cta { padding: 8px 12px; font-size: 0.82rem; }
+      .hero { padding-top: 106px; }
+      .hero h1 { font-size: 2.45rem; line-height: 1.02; }
+      .hero-desc { font-size: 1rem; line-height: 1.65; margin-bottom: 32px; }
+      .hero-badge { font-size: 0.72rem; margin-bottom: 24px; }
+      .proof-grid { grid-template-columns: minmax(0, 1fr) !important; }
+      .proof-card { min-width: 0; }
       .process-steps { grid-template-columns: 1fr; }
       .hero-actions { flex-direction: column; }
       .hero-actions a { text-align: center; justify-content: center; }
+      .hero-actions { margin-bottom: 40px; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 16px; }
     }
 
     /* ─── Floating inquiry bar ─── */
@@ -756,17 +856,63 @@
     .float-whatsapp:hover { background: #1fb855; transform: scale(1.1); }
     .float-email { background: var(--text-primary); color: var(--bg-primary); }
     .float-email:hover { background: var(--metal-light); transform: scale(1.1); }
+    .mobile-contact-cta { display: none; }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      width: max-content;
+      max-width: calc(100vw - 32px);
+      transform: translate(-50%, calc(100% + 64px));
+      opacity: 0;
+      visibility: hidden;
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #fafafa;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: var(--font-body);
+      text-align: center;
+      transition: transform 0.35s ease, opacity 0.35s ease, visibility 0.35s;
+      z-index: 1200;
+      pointer-events: none;
+    }
+    .toast.is-visible {
+      transform: translate(-50%, 0);
+      opacity: 1;
+      visibility: visible;
+    }
 
     @media (max-width: 480px) {
-      .floating-bar {
-        flex-direction: row;
-        bottom: 16px;
+      body { padding-bottom: 76px; }
+      .floating-bar { display: none; }
+      .mobile-contact-cta {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        left: 16px;
         right: 16px;
+        bottom: 14px;
+        min-height: 50px;
+        padding: 12px 20px;
+        background: var(--text-primary);
+        color: var(--bg-primary);
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 10px 36px rgba(0,0,0,0.5);
+        z-index: 900;
       }
-      .float-btn {
-        width: 44px;
-        height: 44px;
-      }
+      .toast { bottom: 80px; width: calc(100vw - 32px); }
+      .chat-widget { bottom: 80px; right: 16px; max-width: calc(100vw - 32px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
   </style>
   <link rel="alternate" hreflang="en" href="https://9gygp5h788.coze.site/" />
@@ -789,15 +935,25 @@
         </div>
         <span class="nav-logo-text">AlumCraft</span>
       </a>
-      <ul class="nav-links">
+      <ul class="nav-links" id="primary-navigation">
         <li><a href="#products">Products</a></li>
         <li><a href="applications.html">Applications</a></li>
         <li><a href="#blog">Blog</a></li>
         <li><a href="#capabilities">Capabilities</a></li>
         <li><a href="faq.html">FAQ</a></li>
+        <li class="mobile-language-switch">
+          <a href="index.html" aria-current="page">EN</a>
+          <a href="ro/index.html">RO</a>
+          <a href="pl/index.html">PL</a>
+        </li>
       </ul>
-      <div class="lang-switch" style="display:flex;gap:4px;align-items:center;font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;"><a href="index.html" style="color:#fafafa;border:1px solid rgba(255,255,255,0.35);text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">EN</a><a href="ro/index.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">RO</a><a href="pl/index.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">PL</a></div>
-      <a href="#contact" class="nav-cta">Get a Quote</a>
+      <div class="nav-actions">
+        <div class="lang-switch" style="display:flex;gap:4px;align-items:center;font-family:'Space Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;"><a href="index.html" aria-current="page" style="color:#fafafa;border:1px solid rgba(255,255,255,0.35);text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">EN</a><a href="ro/index.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">RO</a><a href="pl/index.html" style="color:#a1a1aa;border:1px solid transparent;text-decoration:none;padding:2px 8px;border-radius:3px;transition:all .2s;">PL</a></div>
+        <a href="#contact" class="nav-cta"><span class="nav-cta-label-desktop">Get a Quote</span><span class="nav-cta-label-mobile">Quote</span></a>
+        <button class="mobile-menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="primary-navigation" data-label-open="Open navigation menu" data-label-close="Close navigation menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
     </div>
   </nav>
 
@@ -812,19 +968,18 @@
           Direct Manufacturer &nbsp;·&nbsp; Wholesale &amp; OEM &nbsp;·&nbsp; Global Shipping
         </div>
         <h1>
-          Precision <span class="metal">Aluminum</span><br>
-          Blanks for<br>
-          Sublimation &amp; Heat Press
+          Wholesale <span class="metal">Aluminum Blanks</span><br>
+          for Sublimation
         </h1>
         <p class="hero-desc">
-          A China-based factory supplying coated aluminum blanks in bulk to distributors, print shops and personalization workshops. Consistent coating, custom formats, and OEM / private-label packaging — built to your spec and your volumes.
+          Coated aluminum blanks in standard and custom formats for distributors and print shops. OEM packaging, repeatable coating quality and worldwide shipping.
         </p>
         <div class="hero-actions">
           <a href="#contact" class="btn-primary">
-            Request Free Sample
+            Get Wholesale Price &amp; MOQ
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="#contact" class="btn-secondary">Request Wholesale Quote</a>
+          <a href="#contact" class="btn-secondary" data-product-interest="Standard CR80 Cards">Request Standard Sample</a>
         </div>
         <div class="hero-stats">
           <div class="stat-item">
@@ -833,7 +988,7 @@
           </div>
           <div class="stat-item">
             <div class="stat-value">3–5 Days</div>
-            <div class="stat-label">Sample Lead Time</div>
+            <div class="stat-label">Sample Preparation</div>
           </div>
           <div class="stat-item">
             <div class="stat-value">0.22–0.55mm</div>
@@ -855,12 +1010,13 @@
         <div>
           <span class="label">Product Line</span>
           <h2 class="section-title">What We Make</h2>
-          <p class="section-sub">Every blank is laser-cut, edge-polished, and sublimation-coated in-house — consistent quality from piece one to ten thousand.</p>
+          <p class="section-sub">Each format uses the appropriate cutting or die-stamping process, followed by edge finishing and a coating matched to its application.</p>
         </div>
       </div>
       <div class="product-grid">
-        <div class="product-card card-type-1 reveal reveal-delay-1">
-          <div class="product-visual" style="background-image:url('images/CR80.webp');background-size:cover;background-position:center;">
+        <a class="product-card card-type-1 reveal reveal-delay-1" href="#contact" data-product-interest="Standard CR80 Cards" aria-label="Request pricing for CR80 aluminum cards">
+          <div class="product-visual">
+            <img loading="lazy" decoding="async" src="images/CR80.webp" alt="White pearlescent CR80 aluminum card blank" width="1600" height="1073">
           </div>
           <div class="product-info">
             <div class="product-category">Standard Cards</div>
@@ -871,11 +1027,13 @@
               <span class="tag">0.55mm thickness</span>
               <span class="tag">White Pearlescent</span>
             </div>
+            <span class="product-link">Request pricing →</span>
           </div>
-        </div>
+        </a>
 
-        <div class="product-card card-type-2 reveal reveal-delay-2">
-          <div class="product-visual" style="background-image:url('images/custom-shapes.webp');background-size:cover;background-position:center;">
+        <a class="product-card card-type-2 reveal reveal-delay-2" href="#contact" data-product-interest="Custom Shape Blanks" aria-label="Request pricing for custom shape aluminum blanks">
+          <div class="product-visual">
+            <img loading="lazy" decoding="async" src="images/custom-shapes.webp" alt="Custom die-cut aluminum blank shapes" width="1600" height="1195">
           </div>
           <div class="product-info">
             <div class="product-category">Custom Shapes</div>
@@ -886,11 +1044,13 @@
               <span class="tag">Vector File Ready</span>
               <span class="tag">MOQ: 50,000pcs</span>
             </div>
+            <span class="product-link">Request pricing →</span>
           </div>
-        </div>
+        </a>
 
-        <div class="product-card card-type-3 reveal reveal-delay-3">
-          <div class="product-visual" style="background-image:url('images/oversized-card.webp');background-size:cover;background-position:center;">
+        <a class="product-card card-type-3 reveal reveal-delay-3" href="#contact" data-product-interest="Oversized Aluminum Blanks" aria-label="Request pricing for oversized aluminum blanks">
+          <div class="product-visual">
+            <img loading="lazy" decoding="async" src="images/oversized-card.webp" alt="Oversized coated aluminum card blank" width="1600" height="893">
           </div>
           <div class="product-info">
             <div class="product-category">Large Format Cards</div>
@@ -901,11 +1061,13 @@
               <span class="tag">0.55mm thickness</span>
               <span class="tag">Custom Sizes</span>
             </div>
+            <span class="product-link">Request pricing →</span>
           </div>
-        </div>
+        </a>
 
-        <div class="product-card card-type-4 reveal reveal-delay-4">
-          <div class="product-visual" style="background-image:url('images/round-badge.webp');background-size:cover;background-position:center;">
+        <a class="product-card card-type-4 reveal reveal-delay-4" href="#contact" data-product-interest="Round &amp; Specialty Blanks" aria-label="Request pricing for round and specialty aluminum blanks">
+          <div class="product-visual">
+            <img loading="lazy" decoding="async" src="images/round-badge.webp" alt="Round coated aluminum badge blank" width="1600" height="1600">
           </div>
           <div class="product-info">
             <div class="product-category">Specialty Blanks</div>
@@ -916,8 +1078,9 @@
               <span class="tag">Pet Tags</span>
               <span class="tag">Custom Shapes</span>
             </div>
+            <span class="product-link">Request pricing →</span>
           </div>
-        </div>
+        </a>
       </div>
     </div>
   </section>
@@ -951,8 +1114,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
               </div>
               <div>
-                <div class="cap-item-title">Fast Sample Turnaround</div>
-                <div class="cap-item-desc">3–5 days from your file to a physical sample in your hands. We know speed matters for winning new business.</div>
+                <div class="cap-item-title">Fast Sample Preparation</div>
+                <div class="cap-item-desc">Standard samples are prepared in 3–5 business days. Transit time is quoted separately for your destination and shipping method.</div>
               </div>
             </div>
             <div class="cap-item">
@@ -994,7 +1157,7 @@
       <div class="proof-header reveal">
         <span class="label">For Distributors</span>
         <h2 class="section-title">Wholesale &amp; OEM Supply for Distributors</h2>
-        <p class="section-sub" style="margin: 16px auto 0;">If you stock and resell metal cards, sublimation or engraving blanks to local print shops, workshops and promo companies, we can be your upstream supply: consistent coated aluminum, your formats, your brand — at landed prices that leave room in your margin.</p>
+        <p class="section-sub" style="margin: 16px auto 0;">If you stock and resell metal cards, sublimation or engraving blanks, we can support your product line with consistent formats, private-label options, volume pricing and shipping choices quoted for your destination.</p>
       </div>
       <div class="proof-grid" style="margin-top: 48px;">
         <div class="proof-card reveal reveal-delay-1" style="display:flex;gap:16px;align-items:center;padding:24px;">
@@ -1051,7 +1214,7 @@
         <h2 class="section-title">What You Can Make</h2>
         <p class="section-sub" style="margin: 16px auto 0;">The product lines your customers already ask for — from premium metal business cards to VIP, loyalty and gift cards, promotional pieces and pet or luggage tags. <a href="applications.html" style="color: var(--text-primary); text-decoration: underline;">See all applications →</a></p>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px;">
+      <div class="application-showcase-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px;">
         <div class="proof-card reveal reveal-delay-1" style="overflow: hidden; padding: 0;">
           <div style="height: 280px; overflow: hidden;">
             <img loading="lazy" decoding="async" src="images/gold-metal-card.webp" alt="Luxury Gold Metal Business Card" style="width: 100%; height: 100%; object-fit: cover;">
@@ -1082,7 +1245,7 @@
       <div class="process-header reveal">
         <span class="label">How It Works</span>
         <h2 class="section-title">From Idea to Finished Blank</h2>
-        <p class="section-sub" style="margin: 0 auto;">A simple, transparent 4-step process. No surprises. No minimum headaches.</p>
+        <p class="section-sub" style="margin: 0 auto;">A simple, transparent 4-step process with clear MOQs, lead times and shipping options.</p>
       </div>
       <div class="process-steps">
         <div class="step reveal reveal-delay-1">
@@ -1157,7 +1320,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
           </div>
           <div class="product-name" style="margin-bottom:10px;">Proven at volume</div>
-          <p class="proof-text" style="font-style:normal;margin-bottom:0;">Single orders handled up to 250,000+ pieces, with consistent quality from piece one to ten thousand.</p>
+          <p class="proof-text" style="font-style:normal;margin-bottom:0;">Orders exceeding 250,000 pieces, with consistent quality across the full production run.</p>
         </div>
         <div class="proof-card reveal reveal-delay-3">
           <div class="cap-icon" style="margin-bottom:16px;">
@@ -1258,51 +1421,52 @@
         </div>
 
         <div class="contact-form reveal reveal-delay-2">
-          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)" aria-describedby="form-delivery-note">
             <input type="hidden" name="form-name" value="inquiry" />
             <p style="display:none;">
-              <label>Don't fill this out: <input name="bot-field" /></label>
+              <label>Don't fill this out: <input type="text" name="bot-field" tabindex="-1" autocomplete="off" /></label>
             </p>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Your Name *</label>
-                <input type="text" name="name" class="form-input" placeholder="Full name" required />
+                <label class="form-label" for="inquiry-name">Your Name *</label>
+                <input id="inquiry-name" type="text" name="name" class="form-input" placeholder="Full name" minlength="2" maxlength="100" autocomplete="name" required />
               </div>
               <div class="form-group">
-                <label class="form-label">Company (Optional)</label>
-                <input type="text" name="company" class="form-input" placeholder="Company name" />
+                <label class="form-label" for="inquiry-company">Company (Optional)</label>
+                <input id="inquiry-company" type="text" name="company" class="form-input" placeholder="Company name" maxlength="150" autocomplete="organization" />
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Email Address *</label>
-              <input type="email" name="email" class="form-input" placeholder="you@company.com" required />
+              <label class="form-label" for="inquiry-email">Email Address *</label>
+              <input id="inquiry-email" type="email" name="email" class="form-input" placeholder="you@company.com" maxlength="254" autocomplete="email" required />
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Country</label>
-                <input type="text" name="country" class="form-input" placeholder="e.g. United States" />
+                <label class="form-label" for="inquiry-country">Destination Country *</label>
+                <input id="inquiry-country" type="text" name="country" class="form-input" placeholder="e.g. United States" maxlength="100" autocomplete="country-name" required />
               </div>
               <div class="form-group">
-                <label class="form-label">Product Interest</label>
-                <select name="product_interest" class="form-select">
+                <label class="form-label" for="inquiry-product">Product Interest *</label>
+                <select id="inquiry-product" name="product_interest" class="form-select" required>
                   <option value="">Select a product</option>
-                  <option>Standard CR80 Cards</option>
-                  <option>Custom Shape Blanks</option>
-                  <option>Metal Business Cards</option>
-                  <option>Specialty / Other</option>
+                  <option value="Standard CR80 Cards">Standard CR80 Cards</option>
+                  <option value="Custom Shape Blanks">Custom Shape Blanks</option>
+                  <option value="Oversized Aluminum Blanks">Oversized Aluminum Blanks</option>
+                  <option value="Round &amp; Specialty Blanks">Round &amp; Specialty Blanks</option>
+                  <option value="Other / Not sure">Other / Not sure</option>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Quantity Needed</label>
-              <input type="text" name="quantity" class="form-input" placeholder="e.g. 500 pcs" />
+              <label class="form-label" for="inquiry-quantity">Quantity Needed *</label>
+              <input id="inquiry-quantity" type="text" name="quantity" class="form-input" placeholder="e.g. 500 pcs" maxlength="100" inputmode="numeric" required />
             </div>
             <div class="form-group">
-              <label class="form-label">Project Details *</label>
-              <textarea name="message" class="form-textarea" placeholder="Tell us about your project: size, shape, coating requirements, timeline, or any questions..." required></textarea>
+              <label class="form-label" for="inquiry-message">Project Details (Optional)</label>
+              <textarea id="inquiry-message" name="message" class="form-textarea" placeholder="Size, shape, coating requirements, timeline, or any questions..." maxlength="5000"></textarea>
             </div>
             <button type="submit" class="form-submit">Send Inquiry →</button>
-            <p id="form-delivery-note" style="font-size:0.75rem;color:var(--metal-dark);margin-top:12px;text-align:center;">We'll respond within 24 hours with a detailed quote.</p>
+            <p id="form-delivery-note" style="font-size:0.75rem;color:var(--metal-mid);margin-top:12px;text-align:center;">Your reply will include MOQ, volume pricing, sample timing and shipping options.</p>
           </form>
         </div>
       </div>
@@ -1316,110 +1480,106 @@
         <div class="footer-left">
           <span>© 2026 <a href="./">AlumCraft</a>. Premium Aluminum Sublimation Blanks.</span>
         </div>
-        <div class="footer-social">
-          <a aria-label="LinkedIn profile unavailable" hidden>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          </a>
-          <a aria-label="Instagram profile unavailable" hidden>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </a>
-          <a aria-label="Pinterest profile unavailable" hidden>
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
-          </a>
-        </div>
       </div>
     </div>
   </footer>
 
   <!-- Floating Inquiry Buttons -->
   <div class="floating-bar">
-    <button onclick="toggleChat()" id="chat-toggle-btn" class="float-btn" style="background:#6366f1;color:white;" title="AI Customer Service (Lisa)">
+    <button type="button" onclick="toggleChat()" id="chat-toggle-btn" class="float-btn" style="background:#6366f1;color:white;" title="Open quick product answers" aria-label="Open quick product answers" aria-expanded="false" aria-controls="chat-widget">
       <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
     </button>
-    <a href="https://wa.me/+8615386201892" target="_blank" rel="noopener" class="float-btn float-whatsapp" title="WhatsApp (International)" style="text-decoration:none;">
+    <a href="https://wa.me/+8615386201892" target="_blank" rel="noopener" class="float-btn float-whatsapp" title="WhatsApp (International)" aria-label="Contact AlumCraft on WhatsApp" style="text-decoration:none;">
       <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
     </a>
-    <a href="mailto:znegshifan@yushiglobal.cn" class="float-btn float-email" title="Send Email">
+    <a href="mailto:znegshifan@yushiglobal.cn" class="float-btn float-email" title="Send Email" aria-label="Email AlumCraft sales">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </a>
   </div>
+  <a class="mobile-contact-cta" href="#contact">Get Wholesale Quote <span aria-hidden="true">→</span></a>
 
   <!-- Success Toast -->
-  <div id="toast" role="status" aria-live="polite" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:#1a1a1a;border:1px solid rgba(255,255,255,0.15);color:#fafafa;padding:14px 28px;border-radius:8px;font-size:0.9rem;font-family:'Outfit',sans-serif;transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);z-index:200;pointer-events:none;">Thank you! We'll be in touch within 24 hours.</div>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- AI Chat Widget -->
-  <style>
-    .chat-widget { position:fixed; bottom:90px; right:24px; width:380px; max-width:calc(100vw - 48px); height:520px; max-height:calc(100vh - 120px); background:#141414; border:1px solid rgba(255,255,255,0.1); border-radius:12px; display:none; flex-direction:column; overflow:hidden; z-index:1000; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
-    .chat-widget.open { display:flex; }
-    .chat-header { background:#1a1a1a; padding:16px 20px; display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(255,255,255,0.08); }
-    .chat-avatar { width:40px; height:40px; background:linear-gradient(135deg,#6366f1,#8b5cf6); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; color:white; font-size:14px; }
-    .chat-info h3 { color:#fafafa; font-size:14px; font-weight:600; margin:0; }
-    .chat-info span { color:#71717a; font-size:12px; }
-    .chat-close { margin-left:auto; background:none; border:none; color:#71717a; cursor:pointer; padding:4px; }
-    .chat-close:hover { color:#fafafa; }
-    .chat-messages { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:16px; }
-    .chat-msg { max-width:85%; padding:12px 16px; border-radius:12px; font-size:14px; line-height:1.5; }
-    .chat-msg.bot { background:#1a1a1a; color:#d4d4d8; border-bottom-left-radius:4px; align-self:flex-start; }
-    .chat-msg.user { background:#6366f1; color:white; border-bottom-right-radius:4px; align-self:flex-end; }
-    .chat-suggestions { display:flex; flex-wrap:wrap; gap:8px; padding:0 20px 16px; }
-    .chat-suggestion { background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); color:#a5b4fc; padding:8px 14px; border-radius:20px; font-size:12px; cursor:pointer; transition:all 0.2s; }
-    .chat-suggestion:hover { background:rgba(99,102,241,0.25); }
-    .chat-input-area { padding:16px 20px; background:#1a1a1a; border-top:1px solid rgba(255,255,255,0.08); }
-    .chat-input-row { display:flex; gap:10px; }
-    .chat-input { flex:1; background:#0d0d0d; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:10px 14px; color:#fafafa; font-size:14px; outline:none; }
-    .chat-input:focus { border-color:#6366f1; }
-    .chat-send { background:#6366f1; border:none; border-radius:8px; padding:10px 16px; color:white; cursor:pointer; font-weight:600; font-size:14px; }
-    .chat-send:hover { background:#5558e3; }
-    .chat-send:disabled { opacity:0.5; cursor:not-allowed; }
-    .typing-indicator { display:flex; gap:4px; padding:12px 16px; background:#1a1a1a; border-radius:12px; border-bottom-left-radius:4px; width:fit-content; }
-    .typing-dot { width:8px; height:8px; background:#71717a; border-radius:50%; animation:typing 1.4s infinite; }
-    .typing-dot:nth-child(2) { animation-delay:0.2s; }
-    .typing-dot:nth-child(3) { animation-delay:0.4s; }
-    @keyframes typing { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-4px); } }
-    .chat-typing { align-self:flex-start; display:none; }
-    .chat-typing.show { display:block; }
-  </style>
+  <!-- Quick FAQ Widget -->
 
-  <div class="chat-widget" id="chat-widget">
+  <div class="chat-widget" id="chat-widget" role="dialog" aria-modal="false" aria-labelledby="chat-title" aria-describedby="chat-description" hidden>
     <div class="chat-header">
-      <div class="chat-avatar">L</div>
+      <div class="chat-avatar" aria-hidden="true">?</div>
       <div class="chat-info">
-        <h3>Lisa — AlumCraft Sales</h3>
-        <span>Typically replies in minutes</span>
+        <h3 id="chat-title">AlumCraft Quick FAQ</h3>
+        <span id="chat-description">Automated answers · Use the form for quotes</span>
       </div>
-      <button class="chat-close" onclick="toggleChat()">
+      <button type="button" class="chat-close" onclick="toggleChat()" aria-label="Close quick answers">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+    <div class="chat-typing" id="chat-typing" aria-hidden="true"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
     <div class="chat-suggestions" id="chat-suggestions">
-      <button class="chat-suggestion" onclick="sendSuggestion('What is the MOQ for standard cards?')">MOQ for standard cards?</button>
-      <button class="chat-suggestion" onclick="sendSuggestion('What thickness options do you have?')">Thickness options?</button>
-      <button class="chat-suggestion" onclick="sendSuggestion('How long for sample?')">Sample lead time?</button>
-      <button class="chat-suggestion" onclick="sendSuggestion('What is your wholesale price?')">Wholesale pricing?</button>
+      <button type="button" class="chat-suggestion" onclick="sendSuggestion('What is the MOQ for standard cards?')">MOQ for standard cards?</button>
+      <button type="button" class="chat-suggestion" onclick="sendSuggestion('What thickness options do you have?')">Thickness options?</button>
+      <button type="button" class="chat-suggestion" onclick="sendSuggestion('How long for sample?')">Sample lead time?</button>
+      <button type="button" class="chat-suggestion" onclick="sendSuggestion('What is your wholesale price?')">Wholesale pricing?</button>
     </div>
     <div class="chat-input-area">
       <div class="chat-input-row">
-        <input type="text" class="chat-input" id="chat-input" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
-        <button class="chat-send" id="chat-send" onclick="sendMessage()">Send</button>
+        <input type="text" class="chat-input" id="chat-input" aria-label="Your product question" maxlength="500" placeholder="Type your message..." onkeypress="if(event.key==='Enter')sendMessage()">
+        <button type="button" class="chat-send" id="chat-send" onclick="sendMessage()">Send</button>
       </div>
     </div>
   </div>
-  <div class="chat-typing" id="chat-typing"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
 
-  <script src="js/contact-form.js"></script>
+  <script src="js/contact-form.js" defer></script>
   <script>
     // Scroll reveal
     const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if ('IntersectionObserver' in window && !prefersReducedMotion) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      reveals.forEach((element) => {
+        element.classList.add('reveal-pending');
+        observer.observe(element);
+      });
+    } else {
+      reveals.forEach(element => element.classList.add('visible'));
+    }
+
+    // Mobile navigation
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
+    const primaryNavigation = document.getElementById('primary-navigation');
+
+    function setMenuOpen(open) {
+      if (!menuToggle || !primaryNavigation) return;
+      primaryNavigation.classList.toggle('is-open', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      menuToggle.setAttribute('aria-label', open ? menuToggle.dataset.labelClose : menuToggle.dataset.labelOpen);
+    }
+
+    if (menuToggle && primaryNavigation) {
+      menuToggle.addEventListener('click', () => {
+        setMenuOpen(!primaryNavigation.classList.contains('is-open'));
+      });
+      primaryNavigation.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => setMenuOpen(false));
+      });
+      document.querySelector('.nav-cta')?.addEventListener('click', () => setMenuOpen(false));
+      document.addEventListener('click', (event) => {
+        if (primaryNavigation.classList.contains('is-open') && event.target instanceof Element && !event.target.closest('nav')) {
+          setMenuOpen(false);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-    reveals.forEach(el => observer.observe(el));
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 960) setMenuOpen(false);
+      });
+    }
 
     // Smooth nav
     window.addEventListener('scroll', () => {
@@ -1432,19 +1592,28 @@
     });
 
     // =========================================
-    // Chat Widget - local product assistant
+    // Quick FAQ widget - local product answers
     // =========================================
     const CHAT_CONTACT = 'Email: znegshifan@yushiglobal.cn\nWhatsApp: +86 153 8620 1892';
     let chatOpen = false;
     let chatInitialized = false;
 
-    function toggleChat() {
-      chatOpen = !chatOpen;
+    function toggleChat(forceOpen) {
       const widget = document.getElementById('chat-widget');
+      const toggle = document.getElementById('chat-toggle-btn');
+      const focusWasInside = widget.contains(document.activeElement);
+      chatOpen = typeof forceOpen === 'boolean' ? forceOpen : !chatOpen;
       widget.classList.toggle('open', chatOpen);
+      widget.hidden = !chatOpen;
+      toggle.setAttribute('aria-expanded', String(chatOpen));
       if (chatOpen && !chatInitialized) {
         initChat();
         chatInitialized = true;
+      }
+      if (chatOpen) {
+        window.requestAnimationFrame(() => document.getElementById('chat-input').focus());
+      } else if (focusWasInside) {
+        toggle.focus();
       }
     }
 
@@ -1452,7 +1621,7 @@
       const messagesEl = document.getElementById('chat-messages');
       messagesEl.innerHTML = '';
       addChatMessage(
-        'Lisa from AlumCraft\n\nHello! I can help with common questions about MOQ, thickness, samples, custom shapes, and quotes. For a formal quote, please send your size, thickness, quantity, destination country, and timeline.\n\n' + CHAT_CONTACT,
+        'AlumCraft quick answers\n\nHello! This automated FAQ can answer common questions about MOQ, thickness, samples, custom shapes, and shipping. It does not provide a binding quote. For pricing, use the inquiry form and include your size, thickness, quantity, destination country, and timeline.\n\n' + CHAT_CONTACT,
         false
       );
     }
@@ -1473,7 +1642,9 @@
     }
 
     function showChatTyping(show) {
-      document.getElementById('chat-typing').classList.toggle('show', show);
+      const typing = document.getElementById('chat-typing');
+      typing.classList.toggle('show', show);
+      typing.setAttribute('aria-hidden', String(!show));
     }
 
     function getChatReply(message) {
@@ -1522,6 +1693,16 @@
       document.getElementById('chat-input').value = text;
       sendMessage();
     }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      if (chatOpen) {
+        toggleChat(false);
+      } else if (primaryNavigation?.classList.contains('is-open')) {
+        setMenuOpen(false);
+        menuToggle.focus();
+      }
+    });
   </script>
 </body>
 </html>
