@@ -1256,29 +1256,28 @@
         </div>
 
         <div class="contact-form reveal reveal-delay-2">
-          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
-            <input type="hidden" name="form-name" value="inquiry" />
+          <form id="inquiry-form" name="inquiry" method="POST" action="/api/inquiry" onsubmit="handleSubmit(event)">
             <p style="display:none;">
-              <label>Nie wypełniaj tego pola: <input name="bot-field" /></label>
+              <label>Nie wypełniaj tego pola: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
             </p>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Imię i nazwisko *</label>
-                <input type="text" name="name" class="form-input" placeholder="Imię i nazwisko" required />
+                <input type="text" name="name" class="form-input" placeholder="Imię i nazwisko" minlength="2" maxlength="100" autocomplete="name" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Firma (opcjonalnie)</label>
-                <input type="text" name="company" class="form-input" placeholder="Nazwa firmy" />
+                <input type="text" name="company" class="form-input" placeholder="Nazwa firmy" maxlength="150" autocomplete="organization" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Adres e-mail *</label>
-              <input type="email" name="email" class="form-input" placeholder="you@company.com" required />
+              <input type="email" name="email" class="form-input" placeholder="you@company.com" maxlength="254" autocomplete="email" required />
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Kraj</label>
-                <input type="text" name="country" class="form-input" placeholder="np. Polska" />
+                <input type="text" name="country" class="form-input" placeholder="np. Polska" maxlength="100" autocomplete="country-name" />
               </div>
               <div class="form-group">
                 <label class="form-label">Interesujący produkt</label>
@@ -1293,12 +1292,13 @@
             </div>
             <div class="form-group">
               <label class="form-label">Potrzebna ilość</label>
-              <input type="text" name="quantity" class="form-input" placeholder="np. 500 szt" />
+              <input type="text" name="quantity" class="form-input" placeholder="np. 500 szt" maxlength="100" />
             </div>
             <div class="form-group">
               <label class="form-label">Szczegóły projektu *</label>
-              <textarea name="message" class="form-textarea" placeholder="Opisz projekt: wymiar, kształt, wymagania dotyczące powłoki, termin lub pytania..." required></textarea>
+              <textarea name="message" class="form-textarea" placeholder="Opisz projekt: wymiar, kształt, wymagania dotyczące powłoki, termin lub pytania..." minlength="10" maxlength="5000" required></textarea>
             </div>
+            <p style="font-size:0.75rem;color:var(--metal-dark);margin:0 0 12px;line-height:1.5;">Wysyłając formularz, zgadzasz się, aby AlumCraft wykorzystał podane informacje do odpowiedzi na to zapytanie.</p>
             <button type="submit" class="form-submit">Wyślij zapytanie →</button>
             <p id="form-delivery-note" style="font-size:0.75rem;color:var(--metal-dark);margin-top:12px;text-align:center;">Odpowiemy w ciągu 24 godzin ze szczegółową wyceną.</p>
           </form>
