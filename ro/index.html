@@ -1256,29 +1256,28 @@
         </div>
 
         <div class="contact-form reveal reveal-delay-2">
-          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
-            <input type="hidden" name="form-name" value="inquiry" />
+          <form id="inquiry-form" name="inquiry" method="POST" action="/api/inquiry" onsubmit="handleSubmit(event)">
             <p style="display:none;">
-              <label>Nu completați acest câmp: <input name="bot-field" /></label>
+              <label>Nu completați acest câmp: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
             </p>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Numele dumneavoastră *</label>
-                <input type="text" name="name" class="form-input" placeholder="Nume complet" required />
+                <input type="text" name="name" class="form-input" placeholder="Nume complet" minlength="2" maxlength="100" autocomplete="name" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Companie (opțional)</label>
-                <input type="text" name="company" class="form-input" placeholder="Numele companiei" />
+                <input type="text" name="company" class="form-input" placeholder="Numele companiei" maxlength="150" autocomplete="organization" />
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Adresă de e-mail *</label>
-              <input type="email" name="email" class="form-input" placeholder="you@company.com" required />
+              <input type="email" name="email" class="form-input" placeholder="you@company.com" maxlength="254" autocomplete="email" required />
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Țară</label>
-                <input type="text" name="country" class="form-input" placeholder="ex. România" />
+                <input type="text" name="country" class="form-input" placeholder="ex. România" maxlength="100" autocomplete="country-name" />
               </div>
               <div class="form-group">
                 <label class="form-label">Produs de interes</label>
@@ -1293,12 +1292,13 @@
             </div>
             <div class="form-group">
               <label class="form-label">Cantitate necesară</label>
-              <input type="text" name="quantity" class="form-input" placeholder="ex. 500 buc" />
+              <input type="text" name="quantity" class="form-input" placeholder="ex. 500 buc" maxlength="100" />
             </div>
             <div class="form-group">
               <label class="form-label">Detalii despre proiect *</label>
-              <textarea name="message" class="form-textarea" placeholder="Descrieți proiectul: dimensiune, formă, cerințe de acoperire, termen sau întrebări..." required></textarea>
+              <textarea name="message" class="form-textarea" placeholder="Descrieți proiectul: dimensiune, formă, cerințe de acoperire, termen sau întrebări..." minlength="10" maxlength="5000" required></textarea>
             </div>
+            <p style="font-size:0.75rem;color:var(--metal-dark);margin:0 0 12px;line-height:1.5;">Prin trimitere, sunteți de acord ca AlumCraft să utilizeze informațiile furnizate pentru a răspunde acestei cereri.</p>
             <button type="submit" class="form-submit">Trimite cererea →</button>
             <p id="form-delivery-note" style="font-size:0.75rem;color:var(--metal-dark);margin-top:12px;text-align:center;">Vă vom răspunde în 24 de ore cu o ofertă detaliată.</p>
           </form>
