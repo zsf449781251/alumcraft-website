@@ -1,6 +1,6 @@
 # AlumCraft Website
 
-Static multilingual B2B website for AlumCraft aluminum sublimation blanks.
+Multilingual B2B website for AlumCraft aluminum sublimation blanks. A small Python service serves the static pages and delivers inquiry forms through the company SMTP account.
 
 Primary production site: `https://9gygp5h788.coze.site`
 
@@ -12,14 +12,15 @@ Primary production site: `https://9gygp5h788.coze.site`
 - Shared assets: `/images/`, `/css/`, and `/js/`
 - Standalone rule-based product assistant: `/chatbot/`
 
-No build step or frontend package installation is required.
+No build step or third-party Python package installation is required.
 
 ## Local Preview
 
 From the repository root:
 
 ```powershell
-python -m http.server 8080 --bind 127.0.0.1
+$env:PORT = '8080'
+python .\server.py
 ```
 
 Then open `http://127.0.0.1:8080/`.
@@ -32,10 +33,19 @@ powershell -ExecutionPolicy Bypass -File .\chatbot\startup.ps1
 
 ## Inquiry Form
 
-- On the primary Coze host, submission opens a pre-filled email draft addressed to `znegshifan@yushiglobal.cn`. The page clearly tells the visitor that they must review and send the email.
-- If the site is ever served directly from a `*.netlify.app` hostname without the legacy redirect, the form submits to Netlify Forms and treats only an HTTP success response as sent.
+- The English, Romanian, and Polish home pages submit to same-origin `POST /api/inquiry`.
+- The service validates the request, applies honeypot and rate-limit checks, and sends through authenticated QQ Mail SMTP.
+- The dedicated website mailbox `449781251@qq.com` is the SMTP sender and inquiry recipient. The visitor's address is used only as `Reply-To`; the public company contact email remains unchanged.
+- The browser reports success only after the SMTP server accepts the message. A retry uses the same submission ID to reduce duplicate delivery.
+- `GET /api/health` reports only service health and whether mail credentials are configured; it never returns secret values.
 
-This prevents a static host from displaying a false success message when no form backend exists.
+Required production secret: `SMTP_PASSWORD`, using a QQ Mail client authorization code for `449781251@qq.com` (not the QQ login password). Keep the real value only in Coze production Secrets. The remaining supported settings are documented in `.env.example`.
+
+Run the automated checks with:
+
+```powershell
+python -m unittest discover -s tests -v
+```
 
 ## Deployment Checklist
 
@@ -44,7 +54,7 @@ Deploy only the public website files. Do not publish internal planning or client
 Before changing the primary public host again:
 
 1. Replace the current Coze base URL in canonical, Open Graph, hreflang, `robots.txt`, and `sitemap.xml` entries.
-2. Verify all three language home pages and their inquiry flows.
+2. Configure the production SMTP secret, verify `/api/health`, then test all three language inquiry flows with one controlled inbox delivery.
 3. Confirm the email and WhatsApp links.
 4. Add real social profile URLs before re-enabling the hidden social icons.
 5. Add an approved privacy policy before collecting inquiries through a server-side form backend.
