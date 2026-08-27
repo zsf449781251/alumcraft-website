@@ -680,7 +680,15 @@
       background: rgba(255,255,255,0.03);
     }
     .form-textarea { resize: vertical; min-height: 120px; }
-    .form-select { cursor: pointer; appearance: none; }
+    .form-select {
+      cursor: pointer;
+      appearance: none;
+      color-scheme: dark;
+    }
+    .form-select option {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-submit {
       width: 100%;

@@ -33,6 +33,12 @@ MAIL_ENVIRONMENT = {
     "INQUIRY_TO_EMAIL": "449781251@qq.com",
 }
 
+LOCALIZED_HOME_PAGES = (
+    Path("index.html"),
+    Path("ro/index.html"),
+    Path("pl/index.html"),
+)
+
 
 class QuietHandler(server.AlumCraftRequestHandler):
     def log_message(self, _format, *args):
@@ -199,6 +205,25 @@ class ProtectionTests(unittest.TestCase):
         ):
             handler.path = public_path
             self.assertTrue(handler._is_public_static_path(), public_path)
+
+
+class FormStyleTests(unittest.TestCase):
+    def test_product_select_has_an_explicit_dark_popup_palette(self):
+        project_root = Path(__file__).resolve().parents[1]
+
+        for relative_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (project_root / relative_path).read_text(encoding="utf-8")
+                self.assertRegex(
+                    html,
+                    r"\.form-select\s*\{[^}]*color-scheme:\s*dark;[^}]*\}",
+                )
+                self.assertRegex(
+                    html,
+                    r"\.form-select option\s*\{[^}]*"
+                    r"background(?:-color)?:\s*var\(--bg-secondary\);[^}]*"
+                    r"color:\s*var\(--text-primary\);[^}]*\}",
+                )
 
 
 class HttpIntegrationTests(unittest.TestCase):
