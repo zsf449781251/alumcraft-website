@@ -1420,8 +1420,7 @@
         </div>
 
         <div class="contact-form reveal reveal-delay-2">
-          <form id="inquiry-form" name="inquiry" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)" aria-describedby="form-delivery-note">
-            <input type="hidden" name="form-name" value="inquiry" />
+          <form id="inquiry-form" name="inquiry" method="POST" action="/api/inquiry" onsubmit="handleSubmit(event)" aria-describedby="form-purpose-note form-delivery-note">
             <p style="display:none;">
               <label>Nu completați acest câmp: <input type="text" name="bot-field" tabindex="-1" autocomplete="off" /></label>
             </p>
@@ -1464,6 +1463,7 @@
               <label class="form-label" for="inquiry-message">Detalii despre proiect (opțional)</label>
               <textarea id="inquiry-message" name="message" class="form-textarea" placeholder="Dimensiune, formă, cerințe de acoperire, termen sau întrebări..." maxlength="5000"></textarea>
             </div>
+            <p id="form-purpose-note" style="font-size:0.75rem;color:var(--metal-mid);margin:0 0 12px;line-height:1.5;">Prin trimitere, sunteți de acord ca AlumCraft să utilizeze informațiile furnizate pentru a răspunde acestei cereri.</p>
             <button type="submit" class="form-submit">Trimite cererea →</button>
             <p id="form-delivery-note" style="font-size:0.75rem;color:var(--metal-mid);margin-top:12px;text-align:center;">Răspunsul va include MOQ, prețuri pe volum, termenul mostrei și opțiuni de transport.</p>
           </form>
