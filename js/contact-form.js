@@ -10,6 +10,17 @@
     'Round & Specialty Blanks',
     'Other / Not sure'
   ];
+  const ATTRIBUTION_FIELDS = [
+    'utm_source',
+    'utm_medium',
+    'utm_campaign',
+    'utm_term',
+    'utm_content',
+    'gclid',
+    'msclkid',
+    'landing_page',
+    'referrer'
+  ];
 
   const COPY = {
     en: {
@@ -110,6 +121,40 @@
     return form.dataset.submissionId;
   }
 
+  function addAttribution(formData) {
+    const marketing = window.AlumCraftMarketing;
+    if (!marketing || typeof marketing.getAttribution !== 'function') return;
+
+    let attribution = {};
+    try {
+      attribution = marketing.getAttribution() || {};
+    } catch (_error) {
+      // Attribution is optional and must never prevent an inquiry from being sent.
+    }
+
+    ATTRIBUTION_FIELDS.forEach((field) => {
+      if (typeof attribution[field] === 'string' && attribution[field]) {
+        formData.set(field, attribution[field]);
+      }
+    });
+  }
+
+  function dispatchInquirySuccess(form, formData, submissionId) {
+    if (form.dataset.successEventId === submissionId) return;
+    form.dataset.successEventId = submissionId;
+
+    const productInterest = String(formData.get('product_interest') || '');
+    document.dispatchEvent(
+      new CustomEvent('alumcraft:inquiry-success', {
+        detail: {
+          form_id: form.id || 'inquiry-form',
+          product_interest: PRODUCT_INTERESTS.includes(productInterest) ? productInterest : '',
+          page_language: getLanguage()
+        }
+      })
+    );
+  }
+
   window.handleSubmit = async function handleSubmit(event) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -126,7 +171,9 @@
     formData.delete('form-name');
     formData.set('language', getLanguage());
     formData.set('source_page', window.location.href);
-    formData.set('submission_id', getSubmissionId(form));
+    const submissionId = getSubmissionId(form);
+    formData.set('submission_id', submissionId);
+    addAttribution(formData);
 
     try {
       const response = await fetch(form.getAttribute('action') || '/api/inquiry', {
@@ -153,6 +200,7 @@
         throw submissionError;
       }
 
+      dispatchInquirySuccess(form, formData, submissionId);
       delete form.dataset.submissionId;
       form.reset();
       button.textContent = copy.sent;

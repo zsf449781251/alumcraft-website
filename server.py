@@ -23,12 +23,13 @@ from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path, PurePosixPath
 from typing import Mapping
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit, urlunsplit
 
 
 LOGGER = logging.getLogger("alumcraft.inquiry")
 PRIMARY_ORIGIN = "https://yushialumcraft.coze.site"
 LEGACY_HOSTS = {"9gygp5h788.coze.site"}
+FORMAL_SITE_HOSTS = frozenset({urlsplit(PRIMARY_ORIGIN).hostname, *LEGACY_HOSTS})
 MAX_BODY_BYTES = 96 * 1024
 RATE_LIMIT_WINDOW_SECONDS = 10 * 60
 RATE_LIMIT_MAX_REQUESTS = 5
@@ -39,6 +40,8 @@ DELIVERY_TRACKER_TTL_SECONDS = 24 * 60 * 60
 DELIVERY_TRACKER_MAX_ENTRIES = 10_000
 SAFE_LANGUAGES = {"en", "ro", "pl"}
 SUBMISSION_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{16,64}$")
+ATTRIBUTION_TEXT_PATTERN = re.compile(r"^[^\W_][\w ._~:/+@-]*$", re.UNICODE)
+CLICK_ID_PATTERN = re.compile(r"^[A-Za-z0-9._~-]{1,256}$")
 EMAIL_PATTERN = re.compile(
     r"^[A-Z0-9.!#$%&'*+/=?^_`{|}~-]+@"
     r"[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?"
@@ -46,7 +49,12 @@ EMAIL_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
-PUBLIC_ROOT_FILES = {"favicon.svg", "robots.txt", "sitemap.xml"}
+PUBLIC_ROOT_FILES = {
+    "favicon.svg",
+    "robots.txt",
+    "sitemap.xml",
+    "bfd6978628c0498aaf0ae2ef9bd2f7d3.txt",
+}
 PUBLIC_DIRECTORY_EXTENSIONS = {
     "css": {".css"},
     "images": {".avif", ".gif", ".ico", ".jpg", ".jpeg", ".png", ".svg", ".webp"},
@@ -82,6 +90,15 @@ class Inquiry:
     message: str
     language: str
     source_page: str
+    utm_source: str = ""
+    utm_medium: str = ""
+    utm_campaign: str = ""
+    utm_term: str = ""
+    utm_content: str = ""
+    gclid: str = ""
+    msclkid: str = ""
+    landing_page: str = ""
+    referrer: str = ""
 
 
 @dataclass(frozen=True)
@@ -251,6 +268,85 @@ def _text(data: Mapping[str, object], key: str, maximum: int, *, required: bool 
     return value
 
 
+def _safe_attribution_text(data: Mapping[str, object], key: str, maximum: int = 256) -> str:
+    """Return optional campaign text without letting metadata reject an inquiry."""
+
+    try:
+        raw_value = data.get(key, "")
+        if raw_value is None or isinstance(raw_value, (dict, list, tuple, set)):
+            return ""
+        value = " ".join(str(raw_value).split())[:maximum]
+    except Exception:
+        return ""
+    if not value or not ATTRIBUTION_TEXT_PATTERN.fullmatch(value):
+        return ""
+    return value
+
+
+def _safe_click_id(data: Mapping[str, object], key: str) -> str:
+    """Keep a complete, syntactically safe ad click identifier or discard it."""
+
+    try:
+        raw_value = data.get(key, "")
+        if raw_value is None or isinstance(raw_value, (dict, list, tuple, set)):
+            return ""
+        value = str(raw_value).strip()
+    except Exception:
+        return ""
+    return value if CLICK_ID_PATTERN.fullmatch(value) else ""
+
+
+def _safe_url_value(data: Mapping[str, object], key: str, *, site_only: bool) -> str:
+    """Strip sensitive URL parts from optional, untrusted attribution metadata."""
+
+    try:
+        raw_value = data.get(key, "")
+        if raw_value is None or isinstance(raw_value, (dict, list, tuple, set)):
+            return ""
+        value = str(raw_value).strip()[:2048]
+        if not value or any(
+            character.isspace() or ord(character) < 32 or ord(character) == 127
+            for character in value
+        ):
+            return ""
+        parsed = urlsplit(value)
+        scheme = parsed.scheme.lower()
+        hostname = parsed.hostname
+        if scheme not in {"http", "https"} or not hostname:
+            return ""
+        hostname = hostname.encode("idna").decode("ascii").lower()
+        if ":" in hostname:
+            if not re.fullmatch(r"[0-9a-f:.]+", hostname):
+                return ""
+        elif (
+            len(hostname) > 253
+            or not re.fullmatch(r"[a-z0-9.-]+", hostname)
+            or ".." in hostname
+            or hostname.startswith((".", "-"))
+            or hostname.endswith((".", "-"))
+        ):
+            return ""
+        if site_only and hostname not in FORMAL_SITE_HOSTS:
+            return ""
+
+        # Rebuild the authority rather than reusing netloc so credentials can
+        # never be carried into the email. Site URLs are canonicalized to the
+        # exact public hostname; external referrers retain a valid port.
+        if ":" in hostname and not hostname.startswith("["):
+            authority = f"[{hostname}]"
+        else:
+            authority = hostname
+        if not site_only:
+            port = parsed.port
+            if port is not None:
+                authority = f"{authority}:{port}"
+
+        path = parsed.path or "/"
+        return urlunsplit((scheme, authority, path, "", ""))
+    except Exception:
+        return ""
+
+
 def _valid_email(value: str) -> bool:
     return (
         len(value) <= 254
@@ -272,10 +368,6 @@ def parse_inquiry(data: Mapping[str, object]) -> Inquiry:
     if language not in SAFE_LANGUAGES:
         language = "en"
 
-    source_page = _text(data, "source_page", 500)
-    if source_page and urlsplit(source_page).scheme not in {"http", "https"}:
-        source_page = ""
-
     return Inquiry(
         name=name,
         company=_text(data, "company", 150),
@@ -285,7 +377,16 @@ def parse_inquiry(data: Mapping[str, object]) -> Inquiry:
         quantity=_text(data, "quantity", 100, required=True),
         message=_text(data, "message", 5000),
         language=language,
-        source_page=source_page,
+        source_page=_safe_url_value(data, "source_page", site_only=True),
+        utm_source=_safe_attribution_text(data, "utm_source"),
+        utm_medium=_safe_attribution_text(data, "utm_medium"),
+        utm_campaign=_safe_attribution_text(data, "utm_campaign"),
+        utm_term=_safe_attribution_text(data, "utm_term"),
+        utm_content=_safe_attribution_text(data, "utm_content"),
+        gclid=_safe_click_id(data, "gclid"),
+        msclkid=_safe_click_id(data, "msclkid"),
+        landing_page=_safe_url_value(data, "landing_page", site_only=True),
+        referrer=_safe_url_value(data, "referrer", site_only=False),
     )
 
 
@@ -304,12 +405,31 @@ def build_email(inquiry: Inquiry, settings: MailSettings) -> EmailMessage:
         ("Product interest", inquiry.product_interest),
         ("Quantity", inquiry.quantity),
         ("Website language", inquiry.language),
-        ("Source page", inquiry.source_page),
         ("Project details", inquiry.message),
     )
     body = "New inquiry submitted through the AlumCraft website.\n\n" + "\n\n".join(
         f"{label}:\n{value}" for label, value in fields if value
     )
+
+    attribution_fields = (
+        ("UTM source", inquiry.utm_source),
+        ("UTM medium", inquiry.utm_medium),
+        ("UTM campaign", inquiry.utm_campaign),
+        ("UTM term", inquiry.utm_term),
+        ("UTM content", inquiry.utm_content),
+        ("Google click ID", inquiry.gclid),
+        ("Microsoft click ID", inquiry.msclkid),
+        ("Landing page", inquiry.landing_page),
+        ("Referrer", inquiry.referrer),
+        ("Source page", inquiry.source_page),
+    )
+    attribution_lines = [
+        f"{label}: {value}" for label, value in attribution_fields if value
+    ]
+    if attribution_lines:
+        body += "\n\nCampaign attribution (untrusted metadata):\n" + "\n".join(
+            attribution_lines
+        )
 
     email_message = EmailMessage()
     email_message["Subject"] = subject
@@ -523,7 +643,7 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
                 parsed = parse_qs(
                     raw_body.decode("utf-8"),
                     keep_blank_values=True,
-                    max_num_fields=20,
+                    max_num_fields=32,
                 )
                 return {key: values[0] if values else "" for key, values in parsed.items()}
         except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:

@@ -1,0 +1,43 @@
+language,market,level,match_type,negative_keyword,reason
+ALL,All proposed markets,Campaign,PHRASE,free download,Digital asset intent
+ALL,All proposed markets,Campaign,PHRASE,template,Design-file intent
+ALL,All proposed markets,Campaign,PHRASE,mockup,Design-file intent
+ALL,All proposed markets,Campaign,EXACT,svg,File-format intent
+ALL,All proposed markets,Campaign,EXACT,png,File-format intent
+ALL,All proposed markets,Campaign,EXACT,psd,File-format intent
+ALL,All proposed markets,Campaign,PHRASE,how to,Educational intent
+ALL,All proposed markets,Campaign,EXACT,tutorial,Educational intent
+ALL,All proposed markets,Campaign,EXACT,jobs,Employment intent
+ALL,All proposed markets,Campaign,EXACT,careers,Employment intent
+ALL,All proposed markets,Campaign,PHRASE,heat press machine,Equipment intent
+ALL,All proposed markets,Campaign,PHRASE,card printer,Equipment intent
+ALL,All proposed markets,Campaign,PHRASE,printing service,Finished-service intent
+ALL,All proposed markets,Campaign,EXACT,used,Second-hand intent
+EN,English target countries,Campaign,PHRASE,business card template,Design-file intent
+EN,English target countries,Campaign,PHRASE,business card design,Design-service intent
+EN,English target countries,Campaign,PHRASE,aluminum scrap,Scrap-material intent
+EN,English target countries,Campaign,PHRASE,vinyl blanks,Wrong material
+EN,English target countries,Campaign,PHRASE,wood blanks,Wrong material
+EN,English target countries,Campaign,PHRASE,plastic cards,Wrong material
+RO,Romania,Campaign,PHRASE,descărcare gratuită,Digital asset intent
+RO,Romania,Campaign,EXACT,șablon,Design-file intent
+RO,Romania,Campaign,EXACT,machetă,Design-file intent
+RO,Romania,Campaign,PHRASE,cum se face,Educational intent
+RO,Romania,Campaign,EXACT,tutorial,Educational intent
+RO,Romania,Campaign,EXACT,locuri de muncă,Employment intent
+RO,Romania,Campaign,PHRASE,presă termică,Equipment intent
+RO,Romania,Campaign,PHRASE,imprimantă carduri,Equipment intent
+RO,Romania,Campaign,PHRASE,servicii de imprimare,Finished-service intent
+RO,Romania,Campaign,PHRASE,fier vechi,Scrap-material intent
+RO,Romania,Campaign,PHRASE,carduri din plastic,Wrong material
+PL,Poland,Campaign,PHRASE,darmowe pobieranie,Digital asset intent
+PL,Poland,Campaign,EXACT,szablon,Design-file intent
+PL,Poland,Campaign,EXACT,makieta,Design-file intent
+PL,Poland,Campaign,PHRASE,jak zrobić,Educational intent
+PL,Poland,Campaign,EXACT,poradnik,Educational intent
+PL,Poland,Campaign,EXACT,praca,Employment intent
+PL,Poland,Campaign,PHRASE,prasa termiczna,Equipment intent
+PL,Poland,Campaign,PHRASE,drukarka do kart,Equipment intent
+PL,Poland,Campaign,PHRASE,usługi drukarskie,Finished-service intent
+PL,Poland,Campaign,PHRASE,złom aluminiowy,Scrap-material intent
+PL,Poland,Campaign,PHRASE,karty plastikowe,Wrong material

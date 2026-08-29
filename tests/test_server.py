@@ -18,6 +18,7 @@ import server
 
 PRIMARY_ORIGIN = "https://yushialumcraft.coze.site"
 LEGACY_ORIGIN = "https://9gygp5h788.coze.site"
+INDEXNOW_KEY = "bfd6978628c0498aaf0ae2ef9bd2f7d3"
 
 VALID_FORM = {
     "name": "Ada Lovelace",
@@ -100,6 +101,36 @@ CANONICAL_PAGES = {
     Path("pl/product-round-specialty-blanks.html"): (
         f"{PRIMARY_ORIGIN}/pl/product-round-specialty-blanks.html"
     ),
+}
+
+PRIVACY_PAGES = {
+    Path("privacy.html"): {
+        "lang": "en",
+        "canonical": f"{PRIMARY_ORIGIN}/privacy.html",
+        "heading": "Privacy &amp; Cookie Notice",
+        "settings": "Cookie settings",
+        "home": Path("index.html"),
+        "home_href": "/privacy.html",
+        "home_label": "Privacy &amp; Cookie Notice",
+    },
+    Path("ro/privacy.html"): {
+        "lang": "ro",
+        "canonical": f"{PRIMARY_ORIGIN}/ro/privacy.html",
+        "heading": "Notificare privind confidențialitatea și modulele cookie",
+        "settings": "Setări cookie",
+        "home": Path("ro/index.html"),
+        "home_href": "/ro/privacy.html",
+        "home_label": "Notificării privind confidențialitatea și modulele cookie",
+    },
+    Path("pl/privacy.html"): {
+        "lang": "pl",
+        "canonical": f"{PRIMARY_ORIGIN}/pl/privacy.html",
+        "heading": "Informacja o prywatności i plikach cookie",
+        "settings": "Ustawienia cookie",
+        "home": Path("pl/index.html"),
+        "home_href": "/pl/privacy.html",
+        "home_label": "Informacją o prywatności i plikach cookie",
+    },
 }
 
 PRODUCT_PAGES = {
@@ -210,6 +241,84 @@ class InquiryValidationTests(unittest.TestCase):
         form = {**VALID_FORM, "source_page": "javascript:alert(1)"}
         self.assertEqual(server.parse_inquiry(form).source_page, "")
 
+    def test_campaign_attribution_is_preserved_without_sensitive_url_parts(self):
+        form = {
+            **VALID_FORM,
+            "utm_source": "  google ads  ",
+            "utm_medium": "paid search",
+            "utm_campaign": "2026 Summer / EU",
+            "utm_term": "custom+aluminum+blanks",
+            "utm_content": "hero_cta",
+            "gclid": "Cj0KCQ-test._~-123",
+            "msclkid": "0123456789abcdef0123456789abcdef",
+            "landing_page": (
+                "https://visitor:secret@yushialumcraft.coze.site/"
+                "product-custom-shape-blanks.html?email=buyer@example.com#quote"
+            ),
+            "referrer": (
+                "https://visitor:secret@partner.example:8443/article"
+                "?email=buyer@example.com#campaign"
+            ),
+        }
+
+        inquiry = server.parse_inquiry(form)
+
+        self.assertEqual(inquiry.utm_source, "google ads")
+        self.assertEqual(inquiry.utm_medium, "paid search")
+        self.assertEqual(inquiry.utm_campaign, "2026 Summer / EU")
+        self.assertEqual(inquiry.utm_term, "custom+aluminum+blanks")
+        self.assertEqual(inquiry.utm_content, "hero_cta")
+        self.assertEqual(inquiry.gclid, "Cj0KCQ-test._~-123")
+        self.assertEqual(inquiry.msclkid, "0123456789abcdef0123456789abcdef")
+        self.assertEqual(
+            inquiry.landing_page,
+            f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+        )
+        self.assertEqual(inquiry.referrer, "https://partner.example:8443/article")
+
+    def test_campaign_attribution_accepts_localized_search_terms(self):
+        inquiry = server.parse_inquiry(
+            {
+                **VALID_FORM,
+                "utm_campaign": "Forme personalizate România",
+                "utm_term": "niestandardowe blanki łódź",
+            }
+        )
+
+        self.assertEqual(inquiry.utm_campaign, "Forme personalizate România")
+        self.assertEqual(inquiry.utm_term, "niestandardowe blanki łódź")
+
+    def test_unsafe_campaign_attribution_is_discarded(self):
+        form = {
+            **VALID_FORM,
+            "source_page": "",
+            "utm_source": "<script>alert(1)</script>",
+            "utm_medium": {"unexpected": "object"},
+            "utm_campaign": "#invalid-prefix",
+            "utm_term": "aluminum|blanks",
+            "utm_content": "cta?email=buyer@example.com",
+            "gclid": "unsafe click id",
+            "msclkid": "unsafe\r\nheader",
+            "landing_page": "https://attacker.example/landing?buyer=secret",
+            "referrer": "javascript:alert(1)",
+        }
+
+        inquiry = server.parse_inquiry(form)
+
+        for field in (
+            "utm_source",
+            "utm_medium",
+            "utm_campaign",
+            "utm_term",
+            "utm_content",
+            "gclid",
+            "msclkid",
+            "landing_page",
+            "referrer",
+        ):
+            with self.subTest(field=field):
+                self.assertEqual(getattr(inquiry, field), "")
+
 
 class EmailTests(unittest.TestCase):
     def setUp(self):
@@ -234,6 +343,56 @@ class EmailTests(unittest.TestCase):
         self.assertEqual(str(message["Reply-To"]), "buyer@example.com")
         self.assertNotIn("buyer@example.com", str(message["From"]))
         self.assertIn("Please quote next month", message.get_content())
+
+    def test_message_places_campaign_values_in_a_separate_untrusted_block(self):
+        inquiry = server.parse_inquiry(
+            {
+                **VALID_FORM,
+                "utm_source": "google",
+                "utm_medium": "cpc",
+                "utm_campaign": "custom_shapes_eu",
+                "utm_term": "custom aluminum blanks",
+                "utm_content": "product_cta",
+                "gclid": "Gclid-123._~",
+                "msclkid": "Msclkid-456._~",
+                "landing_page": (
+                    f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+                    "?private=value#quote"
+                ),
+                "referrer": "https://search.example/results?q=private#result",
+            }
+        )
+
+        body = server.build_email(inquiry, self.settings).get_content()
+        heading = "Campaign attribution (untrusted metadata):"
+
+        self.assertEqual(body.count(heading), 1)
+        attribution = body.split(heading, 1)[1]
+        for expected_line in (
+            "UTM source: google",
+            "UTM medium: cpc",
+            "UTM campaign: custom_shapes_eu",
+            "UTM term: custom aluminum blanks",
+            "UTM content: product_cta",
+            "Google click ID: Gclid-123._~",
+            "Microsoft click ID: Msclkid-456._~",
+            (
+                "Landing page: "
+                f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+            ),
+            "Referrer: https://search.example/results",
+            f"Source page: {PRIMARY_ORIGIN}/",
+        ):
+            with self.subTest(line=expected_line):
+                self.assertIn(expected_line, attribution)
+        self.assertNotIn("private=value", body)
+        self.assertNotIn("q=private", body)
+
+    def test_message_omits_campaign_block_when_no_attribution_is_available(self):
+        inquiry = server.parse_inquiry({**VALID_FORM, "source_page": ""})
+        body = server.build_email(inquiry, self.settings).get_content()
+
+        self.assertNotIn("Campaign attribution (untrusted metadata):", body)
 
     @patch("server.smtplib.SMTP_SSL")
     def test_ssl_delivery_logs_in_and_sends(self, smtp_ssl):
@@ -319,6 +478,7 @@ class ProtectionTests(unittest.TestCase):
             "/images/hero-main.webp",
             "/css/home-chat.css",
             "/js/contact-form.js",
+            f"/{INDEXNOW_KEY}.txt",
         ):
             handler.path = public_path
             self.assertTrue(handler._is_public_static_path(), public_path)
@@ -345,7 +505,7 @@ class DomainMigrationTests(unittest.TestCase):
             path.relative_to(self.project_root)
             for directory in (self.project_root, self.project_root / "ro", self.project_root / "pl")
             for path in directory.glob("*.html")
-            if not path.name.startswith("google")
+            if not path.name.startswith("google") and path.name != "privacy.html"
         }
         self.assertEqual(discovered_pages, set(CANONICAL_PAGES))
 
@@ -625,6 +785,133 @@ class ProductDetailPageTests(unittest.TestCase):
                 )
 
 
+class PromotionReadinessTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_all_24_marketing_pages_load_versioned_consent_and_tracking_assets(self):
+        self.assertEqual(len(CANONICAL_PAGES), 24)
+        asset_patterns = {
+            "privacy consent styles": (
+                r'<link\s+rel="stylesheet"\s+'
+                r'href="/css/privacy-consent\.css\?v=([A-Za-z0-9._-]+)"\s*/?>'
+            ),
+            "marketing config": (
+                r'<script\s+src="/js/marketing-config\.js\?v=([A-Za-z0-9._-]+)"'
+                r'[^>]*></script>'
+            ),
+            "marketing runtime": (
+                r'<script\s+src="/js/marketing\.js\?v=([A-Za-z0-9._-]+)"'
+                r'[^>]*\bdefer\b[^>]*></script>'
+            ),
+        }
+        versions = set()
+
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                page_versions = []
+                for asset_name, pattern in asset_patterns.items():
+                    matches = re.findall(pattern, html)
+                    self.assertEqual(
+                        len(matches),
+                        1,
+                        f"{relative_path} must load one versioned {asset_name} asset",
+                    )
+                    page_versions.append(matches[0])
+                self.assertEqual(
+                    len(set(page_versions)),
+                    1,
+                    f"{relative_path} must use one promotion asset version",
+                )
+                versions.add(page_versions[0])
+
+        self.assertEqual(len(versions), 1, "all marketing pages must share one asset version")
+
+    def test_localized_privacy_pages_have_correct_metadata_copy_and_controls(self):
+        expected_alternates = {
+            "en": f"{PRIMARY_ORIGIN}/privacy.html",
+            "ro": f"{PRIMARY_ORIGIN}/ro/privacy.html",
+            "pl": f"{PRIMARY_ORIGIN}/pl/privacy.html",
+            "x-default": f"{PRIMARY_ORIGIN}/privacy.html",
+        }
+
+        for relative_path, expected in PRIVACY_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertIn(f'<html lang="{expected["lang"]}">', html)
+                self.assertIn('<meta name="robots" content="noindex, follow" />', html)
+                self.assertIn(
+                    f'<link rel="canonical" href="{expected["canonical"]}" />',
+                    html,
+                )
+                alternates = dict(
+                    re.findall(
+                        r'<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+'
+                        r'href="([^"]+)"',
+                        html,
+                    )
+                )
+                self.assertEqual(alternates, expected_alternates)
+                self.assertRegex(
+                    html,
+                    rf'<a\s+href="privacy\.html"\s+lang="{expected["lang"]}"\s+'
+                    rf'aria-current="page">{expected["lang"].upper()}</a>',
+                )
+                self.assertIn(f'<h1>{expected["heading"]}</h1>', html)
+                self.assertIn(expected["settings"], html)
+                self.assertIn("data-consent-settings", html)
+                self.assertIn("alumcraft_consent_v1", html)
+                self.assertIn("alumcraft_attribution_v1", html)
+                for provider in ("Coze", "QQ Mail", "Google", "WhatsApp"):
+                    self.assertIn(provider, html)
+                self.assertIn("https://business.safety.google/privacy/", html)
+
+    def test_privacy_pages_load_versioned_consent_assets(self):
+        versions = set()
+        for relative_path in PRIVACY_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                prefix = "" if len(relative_path.parts) == 1 else "../"
+                patterns = (
+                    rf'href="{re.escape(prefix)}css/privacy-consent\.css\?v=([^"]+)"',
+                    rf'src="{re.escape(prefix)}js/marketing-config\.js\?v=([^"]+)"',
+                    rf'src="{re.escape(prefix)}js/marketing\.js\?v=([^"]+)"',
+                )
+                page_versions = []
+                for pattern in patterns:
+                    matches = re.findall(pattern, html)
+                    self.assertEqual(len(matches), 1)
+                    page_versions.append(matches[0])
+                self.assertEqual(len(set(page_versions)), 1)
+                versions.add(page_versions[0])
+        self.assertEqual(len(versions), 1)
+
+    def test_homepage_inquiry_notices_link_to_same_language_privacy_page(self):
+        for expected in PRIVACY_PAGES.values():
+            with self.subTest(home=str(expected["home"])):
+                html = (self.project_root / expected["home"]).read_text(encoding="utf-8")
+                purpose_note = re.search(
+                    r'<p\s+id="form-purpose-note"[^>]*>(.*?)</p>',
+                    html,
+                    re.DOTALL,
+                )
+                self.assertIsNotNone(purpose_note)
+                self.assertIn(f'href="{expected["home_href"]}"', purpose_note.group(1))
+                self.assertIn(expected["home_label"], purpose_note.group(1))
+
+    def test_marketing_config_does_not_enable_a_real_google_tag_yet(self):
+        config = (self.project_root / "js/marketing-config.js").read_text(encoding="utf-8")
+        configured_id = re.search(
+            r"\bgoogleTagId\s*:\s*(['\"])(.*?)\1",
+            config,
+        )
+
+        self.assertIsNotNone(configured_id)
+        self.assertEqual(configured_id.group(2), "")
+        self.assertNotRegex(config, r"\b(?:G|AW|DC)-[A-Z0-9-]+\b")
+
+
 class HttpIntegrationTests(unittest.TestCase):
     def setUp(self):
         server.SUBMITTER_RATE_LIMITER = server.RateLimiter(
@@ -659,6 +946,13 @@ class HttpIntegrationTests(unittest.TestCase):
                     ) as response:
                         self.assertEqual(response.status, 200)
                         self.assertIn("text/html", response.headers.get_content_type())
+
+    def test_indexnow_ownership_key_is_publicly_served(self):
+        with running_server() as base_url:
+            with urlopen(f"{base_url}/{INDEXNOW_KEY}.txt", timeout=3) as response:
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.headers.get_content_type(), "text/plain")
+                self.assertEqual(response.read().decode("utf-8").strip(), INDEXNOW_KEY)
 
     def test_legacy_domain_redirect_preserves_path_and_query(self):
         parsed_legacy = urlsplit(LEGACY_ORIGIN)
