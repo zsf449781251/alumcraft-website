@@ -779,9 +779,24 @@ class ProductDetailPageTests(unittest.TestCase):
         for homepage_path in LOCALIZED_HOME_PAGES:
             with self.subTest(page=str(homepage_path)):
                 homepage = (self.project_root / homepage_path).read_text(encoding="utf-8")
-                self.assertRegex(
+                contact_version = re.search(
+                    r'<script src="(?:\.\./)?js/contact-form\.js\?v=([^"]+)" defer></script>',
                     homepage,
-                    r'<script src="(?:\.\./)?js/contact-form\.js\?v=[^"]+" defer></script>',
+                )
+                marketing_version = re.search(
+                    r'<script src="/js/marketing\.js\?v=([^"]+)" defer></script>',
+                    homepage,
+                )
+                self.assertIsNotNone(contact_version)
+                self.assertIsNotNone(marketing_version)
+                self.assertEqual(
+                    contact_version.group(1),
+                    marketing_version.group(1),
+                    "contact and marketing logic must be released under one cache version",
+                )
+                self.assertNotRegex(
+                    homepage,
+                    r'contact-form\.js\?v=20260829-products',
                 )
 
 
@@ -910,6 +925,14 @@ class PromotionReadinessTests(unittest.TestCase):
         self.assertIsNotNone(configured_id)
         self.assertEqual(configured_id.group(2), "")
         self.assertNotRegex(config, r"\b(?:G|AW|DC)-[A-Z0-9-]+\b")
+
+    def test_marketing_runtime_syncs_consent_and_sanitizes_page_view_url(self):
+        runtime = (self.project_root / "js/marketing.js").read_text(encoding="utf-8")
+
+        self.assertIn("window.addEventListener('storage', handleConsentStorage)", runtime)
+        self.assertIn("window.location.reload()", runtime)
+        self.assertIn("page_location: sanitizeUrl(window.location.href)", runtime)
+        self.assertIn("pageConfig.page_referrer = pageReferrer", runtime)
 
 
 class HttpIntegrationTests(unittest.TestCase):

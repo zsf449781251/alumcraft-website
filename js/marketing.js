@@ -282,10 +282,14 @@
     window.gtag('set', 'ads_data_redaction', true);
     queueGoogleConsent('update', consent);
     window.gtag('js', new Date());
-    window.gtag('config', googleTagId, {
+    const pageReferrer = sanitizeReferrer(document.referrer);
+    const pageConfig = {
       anonymize_ip: true,
-      send_page_view: consent.analytics === true
-    });
+      send_page_view: consent.analytics === true,
+      page_location: sanitizeUrl(window.location.href)
+    };
+    if (pageReferrer) pageConfig.page_referrer = pageReferrer;
+    window.gtag('config', googleTagId, pageConfig);
 
     const script = document.createElement('script');
     script.async = true;
@@ -527,6 +531,30 @@
     });
   }
 
+  function handleConsentStorage(event) {
+    if (event.key !== CONSENT_STORAGE_KEY && event.key !== null) return;
+
+    const nextConsent = readConsent();
+    const hadGoogleTag = googleTagInitialized;
+    activeConsent = nextConsent;
+    applyConsent(nextConsent || { analytics: false, ads: false });
+
+    // A tag already loaded in this tab cannot be unloaded safely. Reloading
+    // after cross-tab withdrawal restores strict Basic Consent Mode: the next
+    // page load does not request Google code at all.
+    if (hadGoogleTag && (!nextConsent || (!nextConsent.analytics && !nextConsent.ads))) {
+      window.location.reload();
+      return;
+    }
+
+    if (!nextConsent) showDialog('main');
+    document.dispatchEvent(
+      new CustomEvent('alumcraft:consent-updated', {
+        detail: nextConsent ? { ...nextConsent } : null
+      })
+    );
+  }
+
   function handleKeydown(event) {
     if (!dialog || dialog.hidden) return;
 
@@ -564,6 +592,7 @@
     document.addEventListener('click', handleDocumentClick);
     document.addEventListener('keydown', handleKeydown);
     document.addEventListener('alumcraft:inquiry-success', handleInquirySuccess);
+    window.addEventListener('storage', handleConsentStorage);
 
     if (activeConsent) {
       applyConsent(activeConsent);
