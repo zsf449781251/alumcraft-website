@@ -2,7 +2,7 @@
 
 Multilingual B2B website for AlumCraft aluminum sublimation blanks. A small Python service serves the static pages and delivers inquiry forms through the company SMTP account.
 
-Primary production site: `https://9gygp5h788.coze.site`
+Primary production site: `https://yushialumcraft.coze.site`
 
 ## Site Structure
 
@@ -59,7 +59,7 @@ Before changing the primary public host again:
 4. Add real social profile URLs before re-enabling the hidden social icons.
 5. Add an approved privacy policy before collecting inquiries through a server-side form backend.
 
-The root `_redirects` file forwards the legacy Netlify hostname to the primary Coze site after the corresponding GitHub change is merged and deployed by Netlify.
+The root `_redirects` file forwards the legacy Netlify hostname to the primary Coze site after the corresponding GitHub change is merged and deployed by Netlify. The Python server also returns a permanent redirect for GET and HEAD requests that still arrive through the retired Coze hostname, preserving the original path and query string.
 
 ## Contact
 

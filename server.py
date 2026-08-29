@@ -27,6 +27,8 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 
 LOGGER = logging.getLogger("alumcraft.inquiry")
+PRIMARY_ORIGIN = "https://yushialumcraft.coze.site"
+LEGACY_HOSTS = {"9gygp5h788.coze.site"}
 MAX_BODY_BYTES = 96 * 1024
 RATE_LIMIT_WINDOW_SECONDS = 10 * 60
 RATE_LIMIT_MAX_REQUESTS = 5
@@ -357,6 +359,8 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_GET(self) -> None:  # noqa: N802 - stdlib handler API
+        if self._redirect_legacy_domain():
+            return
         if urlsplit(self.path).path == "/api/health":
             try:
                 MailSettings.from_environment()
@@ -371,6 +375,8 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_HEAD(self) -> None:  # noqa: N802 - stdlib handler API
+        if self._redirect_legacy_domain():
+            return
         if not self._is_public_static_path():
             self.send_error(HTTPStatus.NOT_FOUND.value)
             return
@@ -468,6 +474,28 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
                 "This request origin is not allowed.",
                 HTTPStatus.FORBIDDEN,
             )
+
+    def _redirect_legacy_domain(self) -> bool:
+        forwarded_host = self.headers.get("X-Forwarded-Host", "").split(",", 1)[0]
+        request_hosts = (forwarded_host, self.headers.get("Host", ""))
+        is_legacy_host = any(
+            urlsplit(f"//{raw_host.strip()}").hostname in LEGACY_HOSTS
+            for raw_host in request_hosts
+            if raw_host.strip()
+        )
+        if not is_legacy_host:
+            return False
+
+        target = urlsplit(self.path)
+        path = target.path or "/"
+        if target.query:
+            path = f"{path}?{target.query}"
+        self.send_response(HTTPStatus.MOVED_PERMANENTLY.value)
+        self.send_header("Location", f"{PRIMARY_ORIGIN}{path}")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return True
 
     def _read_form_data(self) -> dict[str, object]:
         try:

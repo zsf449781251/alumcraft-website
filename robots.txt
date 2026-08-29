@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://9gygp5h788.coze.site/sitemap.xml
+Sitemap: https://yushialumcraft.coze.site/sitemap.xml

@@ -1,17 +1,23 @@
 import json
 import os
+import re
 import threading
 import unittest
 from contextlib import contextmanager
 from functools import partial
+from http.client import HTTPConnection
 from pathlib import Path
 from urllib.error import HTTPError
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, urlopen
 from unittest.mock import MagicMock, patch
+from xml.etree import ElementTree
 
 import server
 
+
+PRIMARY_ORIGIN = "https://yushialumcraft.coze.site"
+LEGACY_ORIGIN = "https://9gygp5h788.coze.site"
 
 VALID_FORM = {
     "name": "Ada Lovelace",
@@ -22,7 +28,7 @@ VALID_FORM = {
     "quantity": "500 pcs",
     "message": "",
     "language": "en",
-    "source_page": "https://9gygp5h788.coze.site/#contact",
+    "source_page": f"{PRIMARY_ORIGIN}/#contact",
     "submission_id": "test-submission-0001",
 }
 
@@ -38,6 +44,27 @@ LOCALIZED_HOME_PAGES = (
     Path("ro/index.html"),
     Path("pl/index.html"),
 )
+
+CANONICAL_PAGES = {
+    Path("index.html"): f"{PRIMARY_ORIGIN}/",
+    Path("ro/index.html"): f"{PRIMARY_ORIGIN}/ro/",
+    Path("pl/index.html"): f"{PRIMARY_ORIGIN}/pl/",
+    Path("applications.html"): f"{PRIMARY_ORIGIN}/applications.html",
+    Path("ro/applications.html"): f"{PRIMARY_ORIGIN}/ro/applications.html",
+    Path("pl/applications.html"): f"{PRIMARY_ORIGIN}/pl/applications.html",
+    Path("faq.html"): f"{PRIMARY_ORIGIN}/faq.html",
+    Path("ro/faq.html"): f"{PRIMARY_ORIGIN}/ro/faq.html",
+    Path("pl/faq.html"): f"{PRIMARY_ORIGIN}/pl/faq.html",
+    Path("blog-how-to-sublimate-aluminum.html"): (
+        f"{PRIMARY_ORIGIN}/blog-how-to-sublimate-aluminum.html"
+    ),
+    Path("blog-sublimation-blank-thickness-guide.html"): (
+        f"{PRIMARY_ORIGIN}/blog-sublimation-blank-thickness-guide.html"
+    ),
+    Path("blog-custom-die-cut-aluminum.html"): (
+        f"{PRIMARY_ORIGIN}/blog-custom-die-cut-aluminum.html"
+    ),
+}
 
 
 class QuietHandler(server.AlumCraftRequestHandler):
@@ -207,6 +234,152 @@ class ProtectionTests(unittest.TestCase):
             self.assertTrue(handler._is_public_static_path(), public_path)
 
 
+class DomainMigrationTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_public_page_canonicals_use_primary_origin(self):
+        for relative_path, expected_canonical in CANONICAL_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                canonical = re.search(
+                    r'<link\s+rel="canonical"\s+href="([^"]+)"',
+                    html,
+                )
+                self.assertIsNotNone(canonical)
+                self.assertEqual(canonical.group(1), expected_canonical)
+                self.assertNotIn(LEGACY_ORIGIN, html)
+
+    def test_marketing_page_inventory_and_social_urls(self):
+        discovered_pages = {
+            path.relative_to(self.project_root)
+            for directory in (self.project_root, self.project_root / "ro", self.project_root / "pl")
+            for path in directory.glob("*.html")
+            if not path.name.startswith("google")
+        }
+        self.assertEqual(discovered_pages, set(CANONICAL_PAGES))
+
+        for relative_path, expected_canonical in CANONICAL_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                open_graph_urls = re.findall(
+                    r'<meta\s+property="og:url"\s+content="([^"]+)"',
+                    html,
+                )
+                self.assertEqual(open_graph_urls, [expected_canonical])
+
+                image_urls = re.findall(
+                    r'<meta\s+(?:property="og:image"|name="twitter:image")\s+'
+                    r'content="([^"]+)"',
+                    html,
+                )
+                for image_url in image_urls:
+                    parsed = urlsplit(image_url)
+                    self.assertEqual(parsed.scheme, "https")
+                    self.assertEqual(parsed.netloc, urlsplit(PRIMARY_ORIGIN).netloc)
+
+    def test_localized_hreflang_sets_are_exact(self):
+        page_families = (
+            (
+                (Path("index.html"), Path("ro/index.html"), Path("pl/index.html")),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/",
+                    "x-default": f"{PRIMARY_ORIGIN}/",
+                },
+            ),
+            (
+                (
+                    Path("applications.html"),
+                    Path("ro/applications.html"),
+                    Path("pl/applications.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/applications.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/applications.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/applications.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/applications.html",
+                },
+            ),
+            (
+                (Path("faq.html"), Path("ro/faq.html"), Path("pl/faq.html")),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/faq.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/faq.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/faq.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/faq.html",
+                },
+            ),
+        )
+
+        for pages, expected_links in page_families:
+            for relative_path in pages:
+                with self.subTest(page=str(relative_path)):
+                    html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                    links = re.findall(
+                        r'<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+'
+                        r'href="([^"]+)"',
+                        html,
+                    )
+                    self.assertEqual(len(links), len(expected_links))
+                    self.assertEqual(dict(links), expected_links)
+
+    def test_json_ld_site_urls_use_primary_origin(self):
+        def strings(value):
+            if isinstance(value, str):
+                yield value
+            elif isinstance(value, dict):
+                for child in value.values():
+                    yield from strings(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from strings(child)
+
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                scripts = re.findall(
+                    r'<script\s+type="application/ld\+json">(.*?)</script>',
+                    html,
+                    re.DOTALL,
+                )
+                for script in scripts:
+                    payload = json.loads(script)
+                    for value in strings(payload):
+                        parsed = urlsplit(value)
+                        if parsed.hostname and parsed.hostname.endswith("coze.site"):
+                            self.assertEqual(parsed.netloc, urlsplit(PRIMARY_ORIGIN).netloc)
+
+    def test_crawl_metadata_uses_primary_origin(self):
+        robots = (self.project_root / "robots.txt").read_text(encoding="utf-8")
+        sitemap_path = self.project_root / "sitemap.xml"
+        sitemap = sitemap_path.read_text(encoding="utf-8")
+
+        self.assertIn(f"Sitemap: {PRIMARY_ORIGIN}/sitemap.xml", robots)
+        self.assertNotIn(LEGACY_ORIGIN, robots)
+        self.assertNotIn(LEGACY_ORIGIN, sitemap)
+
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        root = ElementTree.fromstring(sitemap)
+        locations = [
+            node.text for node in root.findall("sm:url/sm:loc", namespace)
+        ]
+        last_modified = {
+            node.text for node in root.findall("sm:url/sm:lastmod", namespace)
+        }
+        self.assertEqual(len(locations), len(CANONICAL_PAGES))
+        self.assertCountEqual(locations, CANONICAL_PAGES.values())
+        self.assertEqual(last_modified, {"2026-08-29"})
+
+    def test_deployment_docs_and_config_use_primary_origin(self):
+        for relative_path in (Path(".env.example"), Path("_redirects"), Path("README.md")):
+            with self.subTest(file=str(relative_path)):
+                content = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertIn(PRIMARY_ORIGIN, content)
+                self.assertNotIn(LEGACY_ORIGIN, content)
+
+
 class FormStyleTests(unittest.TestCase):
     def test_product_select_has_an_explicit_dark_popup_palette(self):
         project_root = Path(__file__).resolve().parents[1]
@@ -249,6 +422,78 @@ class HttpIntegrationTests(unittest.TestCase):
             with self.assertRaises(HTTPError) as blocked:
                 urlopen(f"{base_url}/server.py", timeout=3)
             self.assertEqual(blocked.exception.code, 404)
+
+    def test_legacy_domain_redirect_preserves_path_and_query(self):
+        parsed_legacy = urlsplit(LEGACY_ORIGIN)
+        request_target = "/ro/faq.html?from=legacy"
+        proxy_headers = (
+            {"Host": parsed_legacy.netloc},
+            {
+                "Host": "internal-proxy.example",
+                "X-Forwarded-Host": parsed_legacy.netloc,
+            },
+        )
+
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            for method in ("GET", "HEAD"):
+                for headers in proxy_headers:
+                    with self.subTest(method=method, headers=headers):
+                        connection = HTTPConnection(
+                            parsed_local.hostname,
+                            parsed_local.port,
+                            timeout=3,
+                        )
+                        connection.request(method, request_target, headers=headers)
+                        response = connection.getresponse()
+                        response.read()
+                        connection.close()
+
+                        self.assertEqual(response.status, 301)
+                        self.assertEqual(
+                            response.getheader("Location"),
+                            f"{PRIMARY_ORIGIN}{request_target}",
+                        )
+
+    def test_primary_domain_is_not_redirected(self):
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            connection = HTTPConnection(
+                parsed_local.hostname,
+                parsed_local.port,
+                timeout=3,
+            )
+            connection.request(
+                "GET",
+                "/api/health",
+                headers={"Host": urlsplit(PRIMARY_ORIGIN).netloc},
+            )
+            response = connection.getresponse()
+            payload = json.loads(response.read())
+            connection.close()
+
+        self.assertEqual(response.status, 200)
+        self.assertTrue(payload["ok"])
+
+    @patch("server.send_email")
+    def test_primary_origin_allowlist_works_behind_proxy(self, mocked_send):
+        form = {**VALID_FORM, "submission_id": "test-primary-origin-0001"}
+        request_data = urlencode(form).encode()
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Origin": PRIMARY_ORIGIN,
+        }
+        environment = MAIL_ENVIRONMENT | {"ALLOWED_ORIGINS": PRIMARY_ORIGIN}
+
+        with patch.dict(os.environ, environment, clear=True), running_server() as base_url:
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=request_data,
+                headers=headers,
+            )
+
+        self.assertEqual((status, result), (200, {"ok": True}))
+        mocked_send.assert_called_once()
 
     def test_unconfigured_form_fails_without_false_success(self):
         request_data = urlencode(VALID_FORM).encode()
