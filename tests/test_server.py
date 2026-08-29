@@ -500,6 +500,21 @@ class DomainMigrationTests(unittest.TestCase):
                 self.assertEqual(canonical.group(1), expected_canonical)
                 self.assertNotIn(LEGACY_ORIGIN, html)
 
+    def test_search_console_verification_is_scoped_to_primary_homepage(self):
+        verification_meta = (
+            '<meta name="google-site-verification" '
+            'content="mYWpP16TUIrKXalAZcjoSlZh8yLslyuGr4d12oUcKaM" />'
+        )
+        homepage = (self.project_root / "index.html").read_text(encoding="utf-8")
+        homepage_head = homepage.split("</head>", 1)[0]
+
+        self.assertEqual(homepage_head.count(verification_meta), 1)
+        for relative_path in (Path("ro/index.html"), Path("pl/index.html")):
+            localized_homepage = (self.project_root / relative_path).read_text(
+                encoding="utf-8"
+            )
+            self.assertNotIn(verification_meta, localized_homepage)
+
     def test_marketing_page_inventory_and_social_urls(self):
         discovered_pages = {
             path.relative_to(self.project_root)
