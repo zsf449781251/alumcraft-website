@@ -462,7 +462,7 @@
 
   function injectFooterControls() {
     const footer = document.querySelector('footer');
-    if (!footer || footer.querySelector('[data-consent-footer]')) return;
+    if (!footer || footer.querySelector('[data-consent-footer], [data-consent-settings]')) return;
 
     const copy = getCopy();
     const controls = document.createElement('span');
