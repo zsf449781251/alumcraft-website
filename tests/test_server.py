@@ -64,6 +64,93 @@ CANONICAL_PAGES = {
     Path("blog-custom-die-cut-aluminum.html"): (
         f"{PRIMARY_ORIGIN}/blog-custom-die-cut-aluminum.html"
     ),
+    Path("product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html"
+    ),
+    Path("product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+    ),
+    Path("product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html"
+    ),
+    Path("product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html"
+    ),
+    Path("ro/product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-cr80-aluminum-cards.html"
+    ),
+    Path("ro/product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-custom-shape-blanks.html"
+    ),
+    Path("ro/product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-oversized-aluminum-blanks.html"
+    ),
+    Path("ro/product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-round-specialty-blanks.html"
+    ),
+    Path("pl/product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-cr80-aluminum-cards.html"
+    ),
+    Path("pl/product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-custom-shape-blanks.html"
+    ),
+    Path("pl/product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-oversized-aluminum-blanks.html"
+    ),
+    Path("pl/product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-round-specialty-blanks.html"
+    ),
+}
+
+PRODUCT_PAGES = {
+    Path("product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
+    Path("ro/product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("ro/product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("ro/product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("ro/product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
+    Path("pl/product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("pl/product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("pl/product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("pl/product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
 }
 
 
@@ -226,6 +313,9 @@ class ProtectionTests(unittest.TestCase):
             "/favicon.svg",
             "/ro/",
             "/pl/faq.html",
+            "/product-cr80-aluminum-cards.html",
+            "/ro/product-custom-shape-blanks.html",
+            "/pl/product-round-specialty-blanks.html",
             "/images/hero-main.webp",
             "/css/home-chat.css",
             "/js/contact-form.js",
@@ -309,6 +399,58 @@ class DomainMigrationTests(unittest.TestCase):
                     "ro": f"{PRIMARY_ORIGIN}/ro/faq.html",
                     "pl": f"{PRIMARY_ORIGIN}/pl/faq.html",
                     "x-default": f"{PRIMARY_ORIGIN}/faq.html",
+                },
+            ),
+            (
+                (
+                    Path("product-cr80-aluminum-cards.html"),
+                    Path("ro/product-cr80-aluminum-cards.html"),
+                    Path("pl/product-cr80-aluminum-cards.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-cr80-aluminum-cards.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-cr80-aluminum-cards.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html",
+                },
+            ),
+            (
+                (
+                    Path("product-custom-shape-blanks.html"),
+                    Path("ro/product-custom-shape-blanks.html"),
+                    Path("pl/product-custom-shape-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-custom-shape-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-custom-shape-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+                },
+            ),
+            (
+                (
+                    Path("product-oversized-aluminum-blanks.html"),
+                    Path("ro/product-oversized-aluminum-blanks.html"),
+                    Path("pl/product-oversized-aluminum-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-oversized-aluminum-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-oversized-aluminum-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html",
+                },
+            ),
+            (
+                (
+                    Path("product-round-specialty-blanks.html"),
+                    Path("ro/product-round-specialty-blanks.html"),
+                    Path("pl/product-round-specialty-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-round-specialty-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-round-specialty-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html",
                 },
             ),
         )
@@ -399,6 +541,81 @@ class FormStyleTests(unittest.TestCase):
                 )
 
 
+class ProductDetailPageTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_product_pages_are_customization_led_and_quote_ready(self):
+        forbidden_claims = re.compile(
+            r"250K|250[,. ]000|50[,. ]000|¥3,000|certificat(?:e|ion)|"
+            r"certyfikat|capacity|capacitate|wydajność|moce produkcyjne",
+            re.IGNORECASE,
+        )
+        required_topics = ("shape", "size", "thickness", "surface", "packaging")
+
+        for relative_path, product in PRODUCT_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertEqual(len(re.findall(r"<h1(?:\s|>)", html)), 1)
+                self.assertIn(product["image"], html)
+                self.assertNotRegex(html, forbidden_claims)
+                self.assertNotIn("\u2014", html)
+                self.assertNotIn("\u2013", html)
+
+                if len(relative_path.parts) == 1:
+                    plain_text = re.sub(r"<[^>]+>", " ", html).lower()
+                    for topic in required_topics:
+                        self.assertIn(topic, plain_text)
+
+                encoded_interest = product["interest"].replace(" ", "%20").replace("&", "%26")
+                self.assertIn(
+                    f'index.html?product={encoded_interest}#contact',
+                    html,
+                )
+
+    def test_product_pages_publish_product_schema_without_price_claims(self):
+        for relative_path, product in PRODUCT_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                schemas = [
+                    json.loads(script)
+                    for script in re.findall(
+                        r'<script\s+type="application/ld\+json">(.*?)</script>',
+                        html,
+                        re.DOTALL,
+                    )
+                ]
+                products = [schema for schema in schemas if schema.get("@type") == "Product"]
+                self.assertEqual(len(products), 1)
+                schema = products[0]
+                self.assertEqual(schema["url"], CANONICAL_PAGES[relative_path])
+                self.assertTrue(schema["name"])
+                self.assertTrue(schema["description"])
+                self.assertIn(product["image"], schema["image"])
+                self.assertNotIn("offers", schema)
+                self.assertNotIn("aggregateRating", schema)
+
+    def test_homepage_product_cards_link_to_product_pages(self):
+        product_filenames = (
+            "product-cr80-aluminum-cards.html",
+            "product-custom-shape-blanks.html",
+            "product-oversized-aluminum-blanks.html",
+            "product-round-specialty-blanks.html",
+        )
+        for homepage_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(homepage_path)):
+                homepage = (self.project_root / homepage_path).read_text(encoding="utf-8")
+                for filename in product_filenames:
+                    self.assertIn(f'href="{filename}"', homepage)
+
+    def test_contact_form_supports_product_query_prefill(self):
+        script = (self.project_root / "js/contact-form.js").read_text(encoding="utf-8")
+        self.assertIn("URLSearchParams", script)
+        self.assertRegex(script, r"\.get\(['\"]product['\"]\)")
+        for product in PRODUCT_PAGES.values():
+            self.assertIn(product["interest"], script)
+
+
 class HttpIntegrationTests(unittest.TestCase):
     def setUp(self):
         server.SUBMITTER_RATE_LIMITER = server.RateLimiter(
@@ -422,6 +639,17 @@ class HttpIntegrationTests(unittest.TestCase):
             with self.assertRaises(HTTPError) as blocked:
                 urlopen(f"{base_url}/server.py", timeout=3)
             self.assertEqual(blocked.exception.code, 404)
+
+    def test_product_detail_pages_are_public(self):
+        with running_server() as base_url:
+            for relative_path in PRODUCT_PAGES:
+                with self.subTest(page=str(relative_path)):
+                    with urlopen(
+                        f"{base_url}/{relative_path.as_posix()}",
+                        timeout=3,
+                    ) as response:
+                        self.assertEqual(response.status, 200)
+                        self.assertIn("text/html", response.headers.get_content_type())
 
     def test_legacy_domain_redirect_preserves_path_and_query(self):
         parsed_legacy = urlsplit(LEGACY_ORIGIN)

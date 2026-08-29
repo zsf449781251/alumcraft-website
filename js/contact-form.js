@@ -3,6 +3,13 @@
 
   const SALES_EMAIL = 'znegshifan@yushiglobal.cn';
   const REQUEST_TIMEOUT_MS = 30000;
+  const PRODUCT_INTERESTS = [
+    'Standard CR80 Cards',
+    'Custom Shape Blanks',
+    'Oversized Aluminum Blanks',
+    'Round & Specialty Blanks',
+    'Other / Not sure'
+  ];
 
   const COPY = {
     en: {
@@ -168,6 +175,14 @@
 
     const productSelect = form.querySelector('[name="product_interest"]');
     if (productSelect) {
+      const requestedProduct = new URLSearchParams(window.location.search).get('product');
+      const isAvailableOption = Array.from(productSelect.options).some(
+        (option) => option.value === requestedProduct
+      );
+      if (requestedProduct && PRODUCT_INTERESTS.includes(requestedProduct) && isAvailableOption) {
+        productSelect.value = requestedProduct;
+      }
+
       document.querySelectorAll('[data-product-interest]').forEach((link) => {
         link.addEventListener('click', () => {
           productSelect.value = link.dataset.productInterest || '';
