@@ -615,6 +615,15 @@ class ProductDetailPageTests(unittest.TestCase):
         for product in PRODUCT_PAGES.values():
             self.assertIn(product["interest"], script)
 
+    def test_homepages_cache_bust_the_contact_form_script(self):
+        for homepage_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(homepage_path)):
+                homepage = (self.project_root / homepage_path).read_text(encoding="utf-8")
+                self.assertRegex(
+                    homepage,
+                    r'<script src="(?:\.\./)?js/contact-form\.js\?v=[^"]+" defer></script>',
+                )
+
 
 class HttpIntegrationTests(unittest.TestCase):
     def setUp(self):
