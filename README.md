@@ -52,7 +52,7 @@ python -m unittest discover -s tests -v
 
 - Every marketing page loads the shared three-language privacy controls and the conservative Basic Consent Mode flow. Google measurement code is not requested before an affirmative choice.
 - The current consent policy version is configured in `js/marketing-config.js`. Change `privacyVersion` whenever the disclosed optional processing materially changes so returning visitors are asked again.
-- `googleTagId` is intentionally empty until the correct GA4 Google tag is created in the owner's account. Set only the verified `G-...` ID; never commit account credentials, API secrets, or billing information.
+- `googleTagId` is set to the owner-verified GA4 measurement ID `G-EPE558KTZQ`. Keep it as the only configured Google tag, and never commit account credentials, API secrets, or billing information.
 - Successful inquiry delivery raises the non-PII `generate_lead` event. Email and WhatsApp clicks use non-PII event parameters. Inquiry names, email addresses, companies, quantities, and messages are never sent to Google measurement.
 - The localized notices are `/privacy.html`, `/ro/privacy.html`, and `/pl/privacy.html`. They disclose the current Coze, QQ Mail, Google, and WhatsApp/Meta roles without inventing a legal entity name or address.
 - The IndexNow ownership file is `bfd6978628c0498aaf0ae2ef9bd2f7d3.txt`. Keep its filename and contents identical while the key is in use.

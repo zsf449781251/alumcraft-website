@@ -2,7 +2,7 @@
   'use strict';
 
   window.AlumCraftMarketingConfig = Object.freeze({
-    googleTagId: '',
+    googleTagId: 'G-EPE558KTZQ',
     privacyVersion: '2026-08-29'
   });
 })();

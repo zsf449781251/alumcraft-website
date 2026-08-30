@@ -930,16 +930,19 @@ class PromotionReadinessTests(unittest.TestCase):
                 self.assertIn(f'href="{expected["home_href"]}"', purpose_note.group(1))
                 self.assertIn(expected["home_label"], purpose_note.group(1))
 
-    def test_marketing_config_does_not_enable_a_real_google_tag_yet(self):
+    def test_marketing_config_enables_only_the_verified_ga4_tag(self):
         config = (self.project_root / "js/marketing-config.js").read_text(encoding="utf-8")
-        configured_id = re.search(
+        configured_ids = re.findall(
             r"\bgoogleTagId\s*:\s*(['\"])(.*?)\1",
             config,
         )
 
-        self.assertIsNotNone(configured_id)
-        self.assertEqual(configured_id.group(2), "")
-        self.assertNotRegex(config, r"\b(?:G|AW|DC)-[A-Z0-9-]+\b")
+        self.assertEqual(len(configured_ids), 1)
+        self.assertEqual(configured_ids[0][1], "G-EPE558KTZQ")
+        self.assertEqual(
+            re.findall(r"\b(?:G|AW|DC)-[A-Z0-9-]+\b", config),
+            ["G-EPE558KTZQ"],
+        )
 
     def test_marketing_runtime_syncs_consent_and_sanitizes_page_view_url(self):
         runtime = (self.project_root / "js/marketing.js").read_text(encoding="utf-8")
