@@ -32,9 +32,11 @@ The ad copy intentionally emphasizes configurable size, outline, surface, edge d
 
 ## Import files
 
-- `google-search-keywords.csv`: phrase and exact keywords with product-specific final URLs.
-- `google-search-negative-keywords.csv`: conservative campaign-level exclusions. Review the search-term report before adding more.
-- `google-search-ads.csv`: one responsive search ad draft per language and product ad group. Each row has 8 headlines and 4 descriptions.
+> **Safety-critical negative-keyword import:** `google-search-negative-keywords.csv` must be imported only through Google Ads Editor's dedicated **Campaign negative keywords** workflow. Never import it as an ordinary/positive keyword sheet. Map `campaign`, `negative_keyword`, and `negative_match_type` explicitly, then confirm every preview row is a campaign-level negative before applying the import.
+
+- `google-search-keywords.csv`: phrase and exact keywords with product-specific final URLs. Every row has `status=Paused` and must remain paused through review.
+- `google-search-negative-keywords.csv`: conservative campaign-level exclusions expanded to an explicit campaign on every row. Its deliberately negative-specific column names require explicit mapping in the dedicated flow above. Review the search-term report before adding more.
+- `google-search-ads.csv`: one responsive search ad draft per language and product ad group. Each row has 8 headlines, 4 descriptions, and `status=Paused`.
 
 Use UTF-8 when importing so Romanian and Polish diacritics remain intact. Google Ads Editor may require column-name mapping; map the semantic fields rather than renaming or dropping the localized text.
 
