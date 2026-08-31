@@ -5,6 +5,7 @@ import threading
 import unittest
 from contextlib import contextmanager
 from functools import partial
+from html import unescape
 from http.client import HTTPConnection
 from pathlib import Path
 from urllib.error import HTTPError
@@ -687,7 +688,18 @@ class DomainMigrationTests(unittest.TestCase):
         }
         self.assertEqual(len(locations), len(CANONICAL_PAGES))
         self.assertCountEqual(locations, CANONICAL_PAGES.values())
-        self.assertEqual(last_modified, {"2026-08-29"})
+        self.assertEqual(last_modified, {"2026-08-31"})
+
+    def test_public_pages_link_to_canonical_home_directories(self):
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                content = (self.project_root / relative_path).read_text(
+                    encoding="utf-8"
+                )
+                self.assertIsNone(
+                    re.search(r'href=["\'][^"\']*index\.html', content),
+                    "Internal links should use /, /ro/, or /pl/ instead of index.html",
+                )
 
     def test_deployment_docs_and_config_use_primary_origin(self):
         for relative_path in (Path(".env.example"), Path("_redirects"), Path("README.md")):
@@ -743,8 +755,9 @@ class ProductDetailPageTests(unittest.TestCase):
                         self.assertIn(topic, plain_text)
 
                 encoded_interest = product["interest"].replace(" ", "%20").replace("&", "%26")
+                home_path = "/" if len(relative_path.parts) == 1 else f"/{relative_path.parts[0]}/"
                 self.assertIn(
-                    f'index.html?product={encoded_interest}#contact',
+                    f'{home_path}?product={encoded_interest}#contact',
                     html,
                 )
 
@@ -930,6 +943,98 @@ class PromotionReadinessTests(unittest.TestCase):
                 self.assertIn(f'href="{expected["home_href"]}"', purpose_note.group(1))
                 self.assertIn(expected["home_label"], purpose_note.group(1))
 
+    def test_public_copy_avoids_unverified_commercial_commitments(self):
+        claim_sensitive_files = (
+            Path("index.html"),
+            Path("ro/index.html"),
+            Path("pl/index.html"),
+            Path("applications.html"),
+            Path("ro/applications.html"),
+            Path("pl/applications.html"),
+            Path("faq.html"),
+            Path("ro/faq.html"),
+            Path("pl/faq.html"),
+            Path("blog-how-to-sublimate-aluminum.html"),
+            Path("blog-sublimation-blank-thickness-guide.html"),
+            Path("blog-custom-die-cut-aluminum.html"),
+            Path("chatbot/index.html"),
+            Path("chatbot/chat.js"),
+            Path("js/contact-form.js"),
+            Path("TikTok_Content_Calendar.md"),
+        )
+        forbidden_claims = {
+            "invented order volumes": (
+                r"\b(?:50[ ,]?000|250[ ,]?000|275[ ,]?000|320K)\b"
+            ),
+            "fixed tooling prices": r"(?:¥\s*3,?000|\$\s*420)\b",
+            "guaranteed free samples": (
+                r"\bfree samples?\b|\bmostre gratuite\b|\bdarmowe pr[oó]bki\b"
+            ),
+            "fixed preparation or production time": (
+                r"\b(?:3\s*[–-]\s*5|7\s*[–-]\s*15|20\s*[–-]\s*30)\s*"
+                r"(?:business days?|zile(?: lucrătoare)?|dni(?: roboczych)?)\b"
+            ),
+            "guaranteed 24-hour reply": (
+                r"\bwithin 24 hours\b|\bîn 24 de ore\b|\bw ciągu 24 godzin\b"
+            ),
+        }
+
+        for relative_path in claim_sensitive_files:
+            content = (self.project_root / relative_path).read_text(encoding="utf-8")
+            for label, pattern in forbidden_claims.items():
+                with self.subTest(page=str(relative_path), claim=label):
+                    self.assertIsNone(re.search(pattern, content, re.IGNORECASE))
+
+    def test_public_page_search_snippets_are_concise(self):
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                title = re.search(r"<title>(.*?)</title>", html, re.DOTALL)
+                description = re.search(
+                    r'<meta name="description" content="([^"]+)"', html
+                )
+                self.assertIsNotNone(title)
+                self.assertIsNotNone(description)
+                self.assertLessEqual(len(unescape(title.group(1).strip())), 60)
+                self.assertLessEqual(len(unescape(description.group(1).strip())), 160)
+
+    def test_faq_structured_data_matches_visible_answers(self):
+        def normalize_text(value):
+            collapsed = " ".join(unescape(value).split())
+            return re.sub(r"\s+([,.;:!?])", r"\1", collapsed)
+
+        for relative_path in (Path("faq.html"), Path("ro/faq.html"), Path("pl/faq.html")):
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                structured_blocks = re.findall(
+                    r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
+                    html,
+                    re.DOTALL,
+                )
+                faq_data = next(
+                    (
+                        json.loads(block)
+                        for block in structured_blocks
+                        if json.loads(block).get("@type") == "FAQPage"
+                    ),
+                    None,
+                )
+                self.assertIsNotNone(faq_data)
+                rendered_markup = re.sub(
+                    r"<(?:script|style)\b[^>]*>.*?</(?:script|style)>",
+                    " ",
+                    html,
+                    flags=re.DOTALL,
+                )
+                visible_text = normalize_text(
+                    re.sub(r"<[^>]+>", " ", rendered_markup)
+                )
+                for item in faq_data["mainEntity"]:
+                    question = normalize_text(item["name"])
+                    answer = normalize_text(item["acceptedAnswer"]["text"])
+                    self.assertIn(question, visible_text)
+                    self.assertIn(answer, visible_text)
+
     def test_marketing_config_enables_only_the_verified_ga4_tag(self):
         config = (self.project_root / "js/marketing-config.js").read_text(encoding="utf-8")
         configured_ids = re.findall(
@@ -1046,6 +1151,37 @@ class HttpIntegrationTests(unittest.TestCase):
 
         self.assertEqual(response.status, 200)
         self.assertTrue(payload["ok"])
+
+    def test_index_document_urls_redirect_to_canonical_directories(self):
+        redirects = {
+            "/index.html": "/",
+            "/ro/index.html?source=old-link": "/ro/?source=old-link",
+            "/pl/index.html": "/pl/",
+        }
+
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            for method in ("GET", "HEAD"):
+                for request_target, expected_location in redirects.items():
+                    with self.subTest(method=method, path=request_target):
+                        connection = HTTPConnection(
+                            parsed_local.hostname,
+                            parsed_local.port,
+                            timeout=3,
+                        )
+                        connection.request(
+                            method,
+                            request_target,
+                            headers={"Host": urlsplit(PRIMARY_ORIGIN).netloc},
+                        )
+                        response = connection.getresponse()
+                        response.read()
+                        connection.close()
+
+                        self.assertEqual(response.status, 301)
+                        self.assertEqual(
+                            response.getheader("Location"), expected_location
+                        )
 
     @patch("server.send_email")
     def test_primary_origin_allowlist_works_behind_proxy(self, mocked_send):

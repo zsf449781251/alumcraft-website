@@ -79,27 +79,27 @@ function buildLocalResponse(message) {
   const text = message.toLowerCase();
 
   if (text.includes('moq') || text.includes('minimum')) {
-    return 'Standard shapes such as 86x54mm CR80 cards, 115x54mm oversized cards, and 70mm round blanks usually start from 500 pcs. Custom die-cut shapes usually start from 50,000 pcs because a mold is required.\n\nFor a quote, please send size, thickness, quantity, and destination country.\n' + CONTACT_INFO;
+    return 'Minimum order requirements are evaluated for each project based on the confirmed size, shape, thickness, tooling, coating or surface finish, quantity, packaging, and destination.\n\nSend your drawing or specifications for a project-based written quotation; the written quotation governs.\n' + CONTACT_INFO;
   }
 
   if (text.includes('thick') || text.includes('0.55') || text.includes('0.30') || text.includes('0.22')) {
-    return 'Common thickness options include 0.22mm, 0.30mm, 0.40mm, 0.50mm, and 0.55mm. 0.55mm is the most popular option for business cards, membership cards, badges, and other premium blanks.';
+    return 'Common thickness references include 0.22mm, 0.30mm, 0.40mm, 0.50mm, and 0.55mm. A 0.55mm blank feels more rigid for cards and badges, while thinner options provide more flexibility. Confirm the required thickness in the written quotation.';
   }
 
   if (text.includes('sample')) {
-    return 'Samples for standard sizes are available. Typical sample preparation is 3-5 business days, then shipping time depends on destination and shipping method.\n\nPlease email your required size, thickness, quantity, and destination country to znegshifan@yushiglobal.cn.';
+    return 'Sample options can be discussed after we review your specifications. Availability, cost, preparation time, shipping, and any order credit depend on the product, customization, quantity, packaging, and destination and are confirmed in the written quotation.\n\nPlease email your required size, shape, thickness, finish, quantity, packaging, and destination to znegshifan@yushiglobal.cn.';
   }
 
   if (text.includes('custom') || text.includes('shape') || text.includes('die')) {
-    return 'Yes, AlumCraft can produce custom die-cut aluminum blanks from vector files such as DXF, AI, CDR, EPS, or PDF. Custom shapes require mold making, and MOQ is usually 50,000 pcs. Mold cost depends on shape complexity.';
+    return 'Yes, AlumCraft can review custom aluminum blanks from vector files such as DXF, AI, CDR, EPS, or PDF. Size, shape, thickness, coating, color, holes, corners, surface finish, and packaging can be customized. Tooling, minimum quantity, sample options, timing, and price are assessed for the project and confirmed in writing.';
   }
 
   if (text.includes('price') || text.includes('quote') || text.includes('cost')) {
-    return 'To quote accurately, we need size, thickness, coating or surface requirement, quantity, destination country, and whether the shape is standard or custom.\n\nSend those details to znegshifan@yushiglobal.cn and we will reply with pricing, lead time, and shipping options.';
+    return 'To quote accurately, we need size, shape, thickness, coating or surface requirement, holes or corners, quantity, packaging, and destination.\n\nSend those details to znegshifan@yushiglobal.cn. Price, minimum quantity, sample options, production timing, and shipping are subject to the written quotation.';
   }
 
   if (text.includes('ship') || text.includes('delivery') || text.includes('lead time')) {
-    return 'We ship worldwide from China. Samples are usually prepared in 3-5 business days. Bulk production timing depends on quantity and whether a custom mold is needed. Air express and sea freight are both available.';
+    return 'International shipping options can be evaluated from China based on the product, quantity, packaging, destination, and requested timing. Sample and production schedules, transport methods, freight terms, and tracking arrangements are confirmed in the written quotation.';
   }
 
   return 'Thanks for your message. For the fastest help, please share your product type, size, thickness, quantity, destination country, and timeline.\n\n' + CONTACT_INFO;
@@ -165,7 +165,7 @@ function clearChat() {
       <div class="quick-actions">
         <button onclick="sendQuickMessage('What sizes and thickness do you offer?')">View Products</button>
         <button onclick="sendQuickMessage('What is the MOQ for standard size 86x54mm?')">Standard MOQ</button>
-        <button onclick="sendQuickMessage('I need a quote for 50,000 custom shaped pieces')">Custom Quote</button>
+        <button onclick="sendQuickMessage('I need a quote for custom shaped aluminum blanks')">Custom Quote</button>
       </div>
     </div>
   `;

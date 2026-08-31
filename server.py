@@ -481,6 +481,8 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 - stdlib handler API
         if self._redirect_legacy_domain():
             return
+        if self._redirect_canonical_index():
+            return
         if urlsplit(self.path).path == "/api/health":
             try:
                 MailSettings.from_environment()
@@ -496,6 +498,8 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
 
     def do_HEAD(self) -> None:  # noqa: N802 - stdlib handler API
         if self._redirect_legacy_domain():
+            return
+        if self._redirect_canonical_index():
             return
         if not self._is_public_static_path():
             self.send_error(HTTPStatus.NOT_FOUND.value)
@@ -612,6 +616,26 @@ class AlumCraftRequestHandler(SimpleHTTPRequestHandler):
             path = f"{path}?{target.query}"
         self.send_response(HTTPStatus.MOVED_PERMANENTLY.value)
         self.send_header("Location", f"{PRIMARY_ORIGIN}{path}")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+        return True
+
+    def _redirect_canonical_index(self) -> bool:
+        target = urlsplit(self.path)
+        canonical_paths = {
+            "/index.html": "/",
+            "/ro/index.html": "/ro/",
+            "/pl/index.html": "/pl/",
+        }
+        canonical_path = canonical_paths.get(target.path)
+        if canonical_path is None:
+            return False
+
+        if target.query:
+            canonical_path = f"{canonical_path}?{target.query}"
+        self.send_response(HTTPStatus.MOVED_PERMANENTLY.value)
+        self.send_header("Location", canonical_path)
         self.send_header("Cache-Control", "public, max-age=3600")
         self.send_header("Content-Length", "0")
         self.end_headers()

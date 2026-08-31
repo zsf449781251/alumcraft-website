@@ -26,8 +26,8 @@
     en: {
       sending: 'Sending…',
       sent: '✓ Inquiry Sent!',
-      successToast: "Thank you! Your inquiry was sent. We'll reply within 24 hours.",
-      deliveryNote: "Submit once and your inquiry will be delivered directly to our sales inbox. We'll reply within 24 hours.",
+      successToast: "Thank you! Your inquiry was sent to our sales inbox.",
+      deliveryNote: "Submit once. Our sales team will review the project details and reply by email.",
       failedToast: `We couldn't send the inquiry. Please try again or email ${SALES_EMAIL}.`,
       timeoutToast: `The request timed out. Please try again or email ${SALES_EMAIL}.`,
       inProgressToast: 'Your first submission is still being delivered. Please wait a moment before retrying.',
@@ -37,8 +37,8 @@
     ro: {
       sending: 'Se trimite…',
       sent: '✓ Cerere trimisă!',
-      successToast: 'Vă mulțumim! Cererea a fost trimisă. Vă vom răspunde în 24 de ore.',
-      deliveryNote: 'Trimiteți o singură dată, iar cererea va ajunge direct în căsuța noastră de vânzări. Vă răspundem în 24 de ore.',
+      successToast: 'Vă mulțumim! Cererea a fost trimisă în căsuța echipei noastre de vânzări.',
+      deliveryNote: 'Trimiteți formularul o singură dată. Echipa noastră va analiza proiectul și va răspunde prin e-mail.',
       failedToast: `Cererea nu a putut fi trimisă. Încercați din nou sau scrieți la ${SALES_EMAIL}.`,
       timeoutToast: `Solicitarea a expirat. Încercați din nou sau scrieți la ${SALES_EMAIL}.`,
       inProgressToast: 'Prima trimitere este încă în curs. Așteptați puțin înainte de a încerca din nou.',
@@ -48,8 +48,8 @@
     pl: {
       sending: 'Wysyłanie…',
       sent: '✓ Zapytanie wysłane!',
-      successToast: 'Dziękujemy! Zapytanie zostało wysłane. Odpowiemy w ciągu 24 godzin.',
-      deliveryNote: 'Wyślij formularz raz, a zapytanie trafi bezpośrednio do naszej skrzynki sprzedażowej. Odpowiemy w ciągu 24 godzin.',
+      successToast: 'Dziękujemy! Zapytanie zostało wysłane do naszej skrzynki sprzedażowej.',
+      deliveryNote: 'Wyślij formularz tylko raz. Nasz zespół przeanalizuje projekt i odpowie e-mailem.',
       failedToast: `Nie udało się wysłać zapytania. Spróbuj ponownie lub napisz na ${SALES_EMAIL}.`,
       timeoutToast: `Upłynął limit czasu. Spróbuj ponownie lub napisz na ${SALES_EMAIL}.`,
       inProgressToast: 'Pierwsze zgłoszenie jest nadal wysyłane. Odczekaj chwilę przed ponowną próbą.',
