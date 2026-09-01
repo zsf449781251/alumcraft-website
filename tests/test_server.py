@@ -1,0 +1,1311 @@
+import json
+import os
+import re
+import threading
+import unittest
+from contextlib import contextmanager
+from functools import partial
+from html import unescape
+from http.client import HTTPConnection
+from pathlib import Path
+from urllib.error import HTTPError
+from urllib.parse import urlencode, urlsplit
+from urllib.request import Request, urlopen
+from unittest.mock import MagicMock, patch
+from xml.etree import ElementTree
+
+import server
+
+
+PRIMARY_ORIGIN = "https://yushialumcraft.coze.site"
+LEGACY_ORIGIN = "https://9gygp5h788.coze.site"
+INDEXNOW_KEY = "bfd6978628c0498aaf0ae2ef9bd2f7d3"
+
+VALID_FORM = {
+    "name": "Ada Lovelace",
+    "company": "Example Imports",
+    "email": "buyer@example.com",
+    "country": "United Kingdom",
+    "product_interest": "Standard CR80 Cards",
+    "quantity": "500 pcs",
+    "message": "",
+    "language": "en",
+    "source_page": f"{PRIMARY_ORIGIN}/#contact",
+    "submission_id": "test-submission-0001",
+}
+
+MAIL_ENVIRONMENT = {
+    "SMTP_USERNAME": "449781251@qq.com",
+    "SMTP_PASSWORD": "test-only-password",
+    "SMTP_FROM_EMAIL": "449781251@qq.com",
+    "INQUIRY_TO_EMAIL": "449781251@qq.com",
+}
+
+LOCALIZED_HOME_PAGES = (
+    Path("index.html"),
+    Path("ro/index.html"),
+    Path("pl/index.html"),
+)
+
+CANONICAL_PAGES = {
+    Path("index.html"): f"{PRIMARY_ORIGIN}/",
+    Path("ro/index.html"): f"{PRIMARY_ORIGIN}/ro/",
+    Path("pl/index.html"): f"{PRIMARY_ORIGIN}/pl/",
+    Path("applications.html"): f"{PRIMARY_ORIGIN}/applications.html",
+    Path("ro/applications.html"): f"{PRIMARY_ORIGIN}/ro/applications.html",
+    Path("pl/applications.html"): f"{PRIMARY_ORIGIN}/pl/applications.html",
+    Path("faq.html"): f"{PRIMARY_ORIGIN}/faq.html",
+    Path("ro/faq.html"): f"{PRIMARY_ORIGIN}/ro/faq.html",
+    Path("pl/faq.html"): f"{PRIMARY_ORIGIN}/pl/faq.html",
+    Path("blog-how-to-sublimate-aluminum.html"): (
+        f"{PRIMARY_ORIGIN}/blog-how-to-sublimate-aluminum.html"
+    ),
+    Path("blog-sublimation-blank-thickness-guide.html"): (
+        f"{PRIMARY_ORIGIN}/blog-sublimation-blank-thickness-guide.html"
+    ),
+    Path("blog-custom-die-cut-aluminum.html"): (
+        f"{PRIMARY_ORIGIN}/blog-custom-die-cut-aluminum.html"
+    ),
+    Path("product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html"
+    ),
+    Path("product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+    ),
+    Path("product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html"
+    ),
+    Path("product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html"
+    ),
+    Path("ro/product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-cr80-aluminum-cards.html"
+    ),
+    Path("ro/product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-custom-shape-blanks.html"
+    ),
+    Path("ro/product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-oversized-aluminum-blanks.html"
+    ),
+    Path("ro/product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/ro/product-round-specialty-blanks.html"
+    ),
+    Path("pl/product-cr80-aluminum-cards.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-cr80-aluminum-cards.html"
+    ),
+    Path("pl/product-custom-shape-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-custom-shape-blanks.html"
+    ),
+    Path("pl/product-oversized-aluminum-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-oversized-aluminum-blanks.html"
+    ),
+    Path("pl/product-round-specialty-blanks.html"): (
+        f"{PRIMARY_ORIGIN}/pl/product-round-specialty-blanks.html"
+    ),
+}
+
+PRIVACY_PAGES = {
+    Path("privacy.html"): {
+        "lang": "en",
+        "canonical": f"{PRIMARY_ORIGIN}/privacy.html",
+        "heading": "Privacy &amp; Cookie Notice",
+        "settings": "Cookie settings",
+        "home": Path("index.html"),
+        "home_href": "/privacy.html",
+        "home_label": "Privacy &amp; Cookie Notice",
+    },
+    Path("ro/privacy.html"): {
+        "lang": "ro",
+        "canonical": f"{PRIMARY_ORIGIN}/ro/privacy.html",
+        "heading": "Notificare privind confidențialitatea și modulele cookie",
+        "settings": "Setări cookie",
+        "home": Path("ro/index.html"),
+        "home_href": "/ro/privacy.html",
+        "home_label": "Notificării privind confidențialitatea și modulele cookie",
+    },
+    Path("pl/privacy.html"): {
+        "lang": "pl",
+        "canonical": f"{PRIMARY_ORIGIN}/pl/privacy.html",
+        "heading": "Informacja o prywatności i plikach cookie",
+        "settings": "Ustawienia cookie",
+        "home": Path("pl/index.html"),
+        "home_href": "/pl/privacy.html",
+        "home_label": "Informacją o prywatności i plikach cookie",
+    },
+}
+
+PRODUCT_PAGES = {
+    Path("product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
+    Path("ro/product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("ro/product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("ro/product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("ro/product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
+    Path("pl/product-cr80-aluminum-cards.html"): {
+        "interest": "Standard CR80 Cards",
+        "image": "images/CR80.webp",
+    },
+    Path("pl/product-custom-shape-blanks.html"): {
+        "interest": "Custom Shape Blanks",
+        "image": "images/custom-shapes.webp",
+    },
+    Path("pl/product-oversized-aluminum-blanks.html"): {
+        "interest": "Oversized Aluminum Blanks",
+        "image": "images/oversized-card.webp",
+    },
+    Path("pl/product-round-specialty-blanks.html"): {
+        "interest": "Round & Specialty Blanks",
+        "image": "images/round-badge.webp",
+    },
+}
+
+
+class QuietHandler(server.AlumCraftRequestHandler):
+    def log_message(self, _format, *args):
+        pass
+
+
+@contextmanager
+def running_server():
+    handler = partial(QuietHandler, directory=str(Path(__file__).resolve().parents[1]))
+    httpd = server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    try:
+        yield f"http://127.0.0.1:{httpd.server_port}"
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+
+
+def read_json(url, *, data=None, headers=None):
+    request = Request(url, data=data, headers=headers or {})
+    try:
+        with urlopen(request, timeout=3) as response:
+            return response.status, json.loads(response.read())
+    except HTTPError as error:
+        return error.code, json.loads(error.read())
+
+
+class InquiryValidationTests(unittest.TestCase):
+    def test_valid_inquiry_allows_optional_message(self):
+        inquiry = server.parse_inquiry(VALID_FORM)
+        self.assertEqual(inquiry.email, "buyer@example.com")
+        self.assertEqual(inquiry.message, "")
+
+    def test_invalid_email_is_rejected(self):
+        form = {**VALID_FORM, "email": "not-an-email"}
+        with self.assertRaises(server.InquiryError) as raised:
+            server.parse_inquiry(form)
+        self.assertEqual(raised.exception.code, "invalid_email")
+
+    def test_required_quote_fields_are_enforced(self):
+        for field in ("country", "product_interest", "quantity"):
+            with self.subTest(field=field):
+                form = {**VALID_FORM, field: ""}
+                with self.assertRaises(server.InquiryError) as raised:
+                    server.parse_inquiry(form)
+                self.assertEqual(raised.exception.code, "missing_required")
+
+    def test_unknown_language_falls_back_to_english(self):
+        form = {**VALID_FORM, "language": "unknown"}
+        self.assertEqual(server.parse_inquiry(form).language, "en")
+
+    def test_non_http_source_page_is_discarded(self):
+        form = {**VALID_FORM, "source_page": "javascript:alert(1)"}
+        self.assertEqual(server.parse_inquiry(form).source_page, "")
+
+    def test_campaign_attribution_is_preserved_without_sensitive_url_parts(self):
+        form = {
+            **VALID_FORM,
+            "utm_source": "  google ads  ",
+            "utm_medium": "paid search",
+            "utm_campaign": "2026 Summer / EU",
+            "utm_term": "custom+aluminum+blanks",
+            "utm_content": "hero_cta",
+            "gclid": "Cj0KCQ-test._~-123",
+            "msclkid": "0123456789abcdef0123456789abcdef",
+            "landing_page": (
+                "https://visitor:secret@yushialumcraft.coze.site/"
+                "product-custom-shape-blanks.html?email=buyer@example.com#quote"
+            ),
+            "referrer": (
+                "https://visitor:secret@partner.example:8443/article"
+                "?email=buyer@example.com#campaign"
+            ),
+        }
+
+        inquiry = server.parse_inquiry(form)
+
+        self.assertEqual(inquiry.utm_source, "google ads")
+        self.assertEqual(inquiry.utm_medium, "paid search")
+        self.assertEqual(inquiry.utm_campaign, "2026 Summer / EU")
+        self.assertEqual(inquiry.utm_term, "custom+aluminum+blanks")
+        self.assertEqual(inquiry.utm_content, "hero_cta")
+        self.assertEqual(inquiry.gclid, "Cj0KCQ-test._~-123")
+        self.assertEqual(inquiry.msclkid, "0123456789abcdef0123456789abcdef")
+        self.assertEqual(
+            inquiry.landing_page,
+            f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+        )
+        self.assertEqual(inquiry.referrer, "https://partner.example:8443/article")
+
+    def test_campaign_attribution_accepts_localized_search_terms(self):
+        inquiry = server.parse_inquiry(
+            {
+                **VALID_FORM,
+                "utm_campaign": "Forme personalizate România",
+                "utm_term": "niestandardowe blanki łódź",
+            }
+        )
+
+        self.assertEqual(inquiry.utm_campaign, "Forme personalizate România")
+        self.assertEqual(inquiry.utm_term, "niestandardowe blanki łódź")
+
+    def test_unsafe_campaign_attribution_is_discarded(self):
+        form = {
+            **VALID_FORM,
+            "source_page": "",
+            "utm_source": "<script>alert(1)</script>",
+            "utm_medium": {"unexpected": "object"},
+            "utm_campaign": "#invalid-prefix",
+            "utm_term": "aluminum|blanks",
+            "utm_content": "cta?email=buyer@example.com",
+            "gclid": "unsafe click id",
+            "msclkid": "unsafe\r\nheader",
+            "landing_page": "https://attacker.example/landing?buyer=secret",
+            "referrer": "javascript:alert(1)",
+        }
+
+        inquiry = server.parse_inquiry(form)
+
+        for field in (
+            "utm_source",
+            "utm_medium",
+            "utm_campaign",
+            "utm_term",
+            "utm_content",
+            "gclid",
+            "msclkid",
+            "landing_page",
+            "referrer",
+        ):
+            with self.subTest(field=field):
+                self.assertEqual(getattr(inquiry, field), "")
+
+
+class EmailTests(unittest.TestCase):
+    def setUp(self):
+        self.settings = server.MailSettings(
+            host="smtp.qq.com",
+            port=465,
+            username="449781251@qq.com",
+            password="test-only-password",
+            from_email="449781251@qq.com",
+            from_name="AlumCraft Website",
+            to_email="449781251@qq.com",
+            security="ssl",
+            timeout=15,
+        )
+
+    def test_message_uses_fixed_sender_and_visitor_reply_to(self):
+        inquiry = server.parse_inquiry({**VALID_FORM, "message": "Please quote next month."})
+        message = server.build_email(inquiry, self.settings)
+
+        self.assertIn("449781251@qq.com", str(message["From"]))
+        self.assertEqual(str(message["To"]), "449781251@qq.com")
+        self.assertEqual(str(message["Reply-To"]), "buyer@example.com")
+        self.assertNotIn("buyer@example.com", str(message["From"]))
+        self.assertIn("Please quote next month", message.get_content())
+
+    def test_message_places_campaign_values_in_a_separate_untrusted_block(self):
+        inquiry = server.parse_inquiry(
+            {
+                **VALID_FORM,
+                "utm_source": "google",
+                "utm_medium": "cpc",
+                "utm_campaign": "custom_shapes_eu",
+                "utm_term": "custom aluminum blanks",
+                "utm_content": "product_cta",
+                "gclid": "Gclid-123._~",
+                "msclkid": "Msclkid-456._~",
+                "landing_page": (
+                    f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+                    "?private=value#quote"
+                ),
+                "referrer": "https://search.example/results?q=private#result",
+            }
+        )
+
+        body = server.build_email(inquiry, self.settings).get_content()
+        heading = "Campaign attribution (untrusted metadata):"
+
+        self.assertEqual(body.count(heading), 1)
+        attribution = body.split(heading, 1)[1]
+        for expected_line in (
+            "UTM source: google",
+            "UTM medium: cpc",
+            "UTM campaign: custom_shapes_eu",
+            "UTM term: custom aluminum blanks",
+            "UTM content: product_cta",
+            "Google click ID: Gclid-123._~",
+            "Microsoft click ID: Msclkid-456._~",
+            (
+                "Landing page: "
+                f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html"
+            ),
+            "Referrer: https://search.example/results",
+            f"Source page: {PRIMARY_ORIGIN}/",
+        ):
+            with self.subTest(line=expected_line):
+                self.assertIn(expected_line, attribution)
+        self.assertNotIn("private=value", body)
+        self.assertNotIn("q=private", body)
+
+    def test_message_omits_campaign_block_when_no_attribution_is_available(self):
+        inquiry = server.parse_inquiry({**VALID_FORM, "source_page": ""})
+        body = server.build_email(inquiry, self.settings).get_content()
+
+        self.assertNotIn("Campaign attribution (untrusted metadata):", body)
+
+    @patch("server.smtplib.SMTP_SSL")
+    def test_ssl_delivery_logs_in_and_sends(self, smtp_ssl):
+        smtp = MagicMock()
+        smtp_ssl.return_value.__enter__.return_value = smtp
+        message = server.build_email(server.parse_inquiry(VALID_FORM), self.settings)
+
+        server.send_email(message, self.settings)
+
+        smtp.login.assert_called_once_with(
+            "449781251@qq.com",
+            "test-only-password",
+        )
+        smtp.send_message.assert_called_once_with(message)
+
+    def test_missing_password_is_rejected(self):
+        with patch.dict(os.environ, MAIL_ENVIRONMENT | {"SMTP_PASSWORD": ""}, clear=True):
+            with self.assertRaises(server.MailConfigurationError):
+                server.MailSettings.from_environment()
+
+    def test_default_settings_use_dedicated_qq_mailbox(self):
+        with patch.dict(os.environ, {"SMTP_PASSWORD": "test-only-password"}, clear=True):
+            settings = server.MailSettings.from_environment()
+
+        self.assertEqual(settings.host, "smtp.qq.com")
+        self.assertEqual(settings.port, 465)
+        self.assertEqual(settings.security, "ssl")
+        self.assertEqual(settings.username, "449781251@qq.com")
+        self.assertEqual(settings.from_email, "449781251@qq.com")
+        self.assertEqual(settings.to_email, "449781251@qq.com")
+
+
+class ProtectionTests(unittest.TestCase):
+    def test_rate_limiter_blocks_after_limit(self):
+        limiter = server.RateLimiter(limit=2, window_seconds=60)
+        self.assertTrue(limiter.allow("buyer", now=100))
+        self.assertTrue(limiter.allow("buyer", now=101))
+        self.assertFalse(limiter.allow("buyer", now=102))
+        self.assertTrue(limiter.allow("buyer", now=161))
+
+    def test_rate_limiter_bounds_tracked_clients(self):
+        limiter = server.RateLimiter(limit=2, window_seconds=60, max_clients=3)
+        for index in range(10):
+            limiter.allow(f"buyer-{index}", now=1)
+        self.assertLessEqual(len(limiter._requests), 3)
+
+    def test_delivery_tracker_deduplicates_successful_submission(self):
+        tracker = server.DeliveryTracker(ttl_seconds=60, max_entries=10)
+        self.assertEqual(tracker.begin("submission-0000001", now=1), "new")
+        self.assertEqual(tracker.begin("submission-0000001", now=2), "inflight")
+        tracker.succeed("submission-0000001", now=3)
+        self.assertEqual(tracker.begin("submission-0000001", now=4), "success")
+
+    def test_delivery_tracker_allows_retry_after_failure(self):
+        tracker = server.DeliveryTracker(ttl_seconds=60, max_entries=10)
+        self.assertEqual(tracker.begin("submission-0000002", now=1), "new")
+        tracker.fail("submission-0000002")
+        self.assertEqual(tracker.begin("submission-0000002", now=2), "new")
+
+    def test_static_server_blocks_internal_files(self):
+        handler = object.__new__(server.AlumCraftRequestHandler)
+        for blocked_path in (
+            "/README.md",
+            "/server.py",
+            "/.env",
+            "/.git/config",
+            "/tests/test_server.py",
+        ):
+            handler.path = blocked_path
+            self.assertFalse(handler._is_public_static_path(), blocked_path)
+
+    def test_static_server_allows_public_pages_and_assets(self):
+        handler = object.__new__(server.AlumCraftRequestHandler)
+        for public_path in (
+            "/",
+            "/index.html",
+            "/favicon.svg",
+            "/ro/",
+            "/pl/faq.html",
+            "/product-cr80-aluminum-cards.html",
+            "/ro/product-custom-shape-blanks.html",
+            "/pl/product-round-specialty-blanks.html",
+            "/images/hero-main.webp",
+            "/css/home-chat.css",
+            "/js/contact-form.js",
+            f"/{INDEXNOW_KEY}.txt",
+        ):
+            handler.path = public_path
+            self.assertTrue(handler._is_public_static_path(), public_path)
+
+
+class DomainMigrationTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_public_page_canonicals_use_primary_origin(self):
+        for relative_path, expected_canonical in CANONICAL_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                canonical = re.search(
+                    r'<link\s+rel="canonical"\s+href="([^"]+)"',
+                    html,
+                )
+                self.assertIsNotNone(canonical)
+                self.assertEqual(canonical.group(1), expected_canonical)
+                self.assertNotIn(LEGACY_ORIGIN, html)
+
+    def test_search_console_verification_is_scoped_to_primary_homepage(self):
+        verification_meta = (
+            '<meta name="google-site-verification" '
+            'content="mYWpP16TUIrKXalAZcjoSlZh8yLslyuGr4d12oUcKaM" />'
+        )
+        homepage = (self.project_root / "index.html").read_text(encoding="utf-8")
+        homepage_head = homepage.split("</head>", 1)[0]
+
+        self.assertEqual(homepage_head.count(verification_meta), 1)
+        for relative_path in (Path("ro/index.html"), Path("pl/index.html")):
+            localized_homepage = (self.project_root / relative_path).read_text(
+                encoding="utf-8"
+            )
+            self.assertNotIn(verification_meta, localized_homepage)
+
+    def test_marketing_page_inventory_and_social_urls(self):
+        discovered_pages = {
+            path.relative_to(self.project_root)
+            for directory in (self.project_root, self.project_root / "ro", self.project_root / "pl")
+            for path in directory.glob("*.html")
+            if not path.name.startswith("google") and path.name != "privacy.html"
+        }
+        self.assertEqual(discovered_pages, set(CANONICAL_PAGES))
+
+        for relative_path, expected_canonical in CANONICAL_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                open_graph_urls = re.findall(
+                    r'<meta\s+property="og:url"\s+content="([^"]+)"',
+                    html,
+                )
+                self.assertEqual(open_graph_urls, [expected_canonical])
+
+                image_urls = re.findall(
+                    r'<meta\s+(?:property="og:image"|name="twitter:image")\s+'
+                    r'content="([^"]+)"',
+                    html,
+                )
+                for image_url in image_urls:
+                    parsed = urlsplit(image_url)
+                    self.assertEqual(parsed.scheme, "https")
+                    self.assertEqual(parsed.netloc, urlsplit(PRIMARY_ORIGIN).netloc)
+
+    def test_localized_hreflang_sets_are_exact(self):
+        page_families = (
+            (
+                (Path("index.html"), Path("ro/index.html"), Path("pl/index.html")),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/",
+                    "x-default": f"{PRIMARY_ORIGIN}/",
+                },
+            ),
+            (
+                (
+                    Path("applications.html"),
+                    Path("ro/applications.html"),
+                    Path("pl/applications.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/applications.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/applications.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/applications.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/applications.html",
+                },
+            ),
+            (
+                (Path("faq.html"), Path("ro/faq.html"), Path("pl/faq.html")),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/faq.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/faq.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/faq.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/faq.html",
+                },
+            ),
+            (
+                (
+                    Path("product-cr80-aluminum-cards.html"),
+                    Path("ro/product-cr80-aluminum-cards.html"),
+                    Path("pl/product-cr80-aluminum-cards.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-cr80-aluminum-cards.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-cr80-aluminum-cards.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-cr80-aluminum-cards.html",
+                },
+            ),
+            (
+                (
+                    Path("product-custom-shape-blanks.html"),
+                    Path("ro/product-custom-shape-blanks.html"),
+                    Path("pl/product-custom-shape-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-custom-shape-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-custom-shape-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-custom-shape-blanks.html",
+                },
+            ),
+            (
+                (
+                    Path("product-oversized-aluminum-blanks.html"),
+                    Path("ro/product-oversized-aluminum-blanks.html"),
+                    Path("pl/product-oversized-aluminum-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-oversized-aluminum-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-oversized-aluminum-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-oversized-aluminum-blanks.html",
+                },
+            ),
+            (
+                (
+                    Path("product-round-specialty-blanks.html"),
+                    Path("ro/product-round-specialty-blanks.html"),
+                    Path("pl/product-round-specialty-blanks.html"),
+                ),
+                {
+                    "en": f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html",
+                    "ro": f"{PRIMARY_ORIGIN}/ro/product-round-specialty-blanks.html",
+                    "pl": f"{PRIMARY_ORIGIN}/pl/product-round-specialty-blanks.html",
+                    "x-default": f"{PRIMARY_ORIGIN}/product-round-specialty-blanks.html",
+                },
+            ),
+        )
+
+        for pages, expected_links in page_families:
+            for relative_path in pages:
+                with self.subTest(page=str(relative_path)):
+                    html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                    links = re.findall(
+                        r'<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+'
+                        r'href="([^"]+)"',
+                        html,
+                    )
+                    self.assertEqual(len(links), len(expected_links))
+                    self.assertEqual(dict(links), expected_links)
+
+    def test_json_ld_site_urls_use_primary_origin(self):
+        def strings(value):
+            if isinstance(value, str):
+                yield value
+            elif isinstance(value, dict):
+                for child in value.values():
+                    yield from strings(child)
+            elif isinstance(value, list):
+                for child in value:
+                    yield from strings(child)
+
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                scripts = re.findall(
+                    r'<script\s+type="application/ld\+json">(.*?)</script>',
+                    html,
+                    re.DOTALL,
+                )
+                for script in scripts:
+                    payload = json.loads(script)
+                    for value in strings(payload):
+                        parsed = urlsplit(value)
+                        if parsed.hostname and parsed.hostname.endswith("coze.site"):
+                            self.assertEqual(parsed.netloc, urlsplit(PRIMARY_ORIGIN).netloc)
+
+    def test_crawl_metadata_uses_primary_origin(self):
+        robots = (self.project_root / "robots.txt").read_text(encoding="utf-8")
+        sitemap_path = self.project_root / "sitemap.xml"
+        sitemap = sitemap_path.read_text(encoding="utf-8")
+
+        self.assertIn(f"Sitemap: {PRIMARY_ORIGIN}/sitemap.xml", robots)
+        self.assertNotIn(LEGACY_ORIGIN, robots)
+        self.assertNotIn(LEGACY_ORIGIN, sitemap)
+
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        root = ElementTree.fromstring(sitemap)
+        locations = [
+            node.text for node in root.findall("sm:url/sm:loc", namespace)
+        ]
+        last_modified = {
+            node.text for node in root.findall("sm:url/sm:lastmod", namespace)
+        }
+        self.assertEqual(len(locations), len(CANONICAL_PAGES))
+        self.assertCountEqual(locations, CANONICAL_PAGES.values())
+        self.assertEqual(last_modified, {"2026-08-31"})
+
+    def test_public_pages_link_to_canonical_home_directories(self):
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                content = (self.project_root / relative_path).read_text(
+                    encoding="utf-8"
+                )
+                self.assertIsNone(
+                    re.search(r'href=["\'][^"\']*index\.html', content),
+                    "Internal links should use /, /ro/, or /pl/ instead of index.html",
+                )
+
+    def test_deployment_docs_and_config_use_primary_origin(self):
+        for relative_path in (Path(".env.example"), Path("_redirects"), Path("README.md")):
+            with self.subTest(file=str(relative_path)):
+                content = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertIn(PRIMARY_ORIGIN, content)
+                self.assertNotIn(LEGACY_ORIGIN, content)
+
+
+class FormStyleTests(unittest.TestCase):
+    def test_product_select_has_an_explicit_dark_popup_palette(self):
+        project_root = Path(__file__).resolve().parents[1]
+
+        for relative_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (project_root / relative_path).read_text(encoding="utf-8")
+                self.assertRegex(
+                    html,
+                    r"\.form-select\s*\{[^}]*color-scheme:\s*dark;[^}]*\}",
+                )
+                self.assertRegex(
+                    html,
+                    r"\.form-select option\s*\{[^}]*"
+                    r"background(?:-color)?:\s*var\(--bg-secondary\);[^}]*"
+                    r"color:\s*var\(--text-primary\);[^}]*\}",
+                )
+
+
+class ProductDetailPageTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_product_pages_are_customization_led_and_quote_ready(self):
+        forbidden_claims = re.compile(
+            r"250K|250[,. ]000|50[,. ]000|¥3,000|certificat(?:e|ion)|"
+            r"certyfikat|capacity|capacitate|wydajność|moce produkcyjne",
+            re.IGNORECASE,
+        )
+        required_topics = ("shape", "size", "thickness", "surface", "packaging")
+
+        for relative_path, product in PRODUCT_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertEqual(len(re.findall(r"<h1(?:\s|>)", html)), 1)
+                self.assertIn(product["image"], html)
+                self.assertNotRegex(html, forbidden_claims)
+                self.assertNotIn("\u2014", html)
+                self.assertNotIn("\u2013", html)
+
+                if len(relative_path.parts) == 1:
+                    plain_text = re.sub(r"<[^>]+>", " ", html).lower()
+                    for topic in required_topics:
+                        self.assertIn(topic, plain_text)
+
+                encoded_interest = product["interest"].replace(" ", "%20").replace("&", "%26")
+                home_path = "/" if len(relative_path.parts) == 1 else f"/{relative_path.parts[0]}/"
+                self.assertIn(
+                    f'{home_path}?product={encoded_interest}#contact',
+                    html,
+                )
+
+    def test_product_pages_publish_product_schema_without_price_claims(self):
+        for relative_path, product in PRODUCT_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                schemas = [
+                    json.loads(script)
+                    for script in re.findall(
+                        r'<script\s+type="application/ld\+json">(.*?)</script>',
+                        html,
+                        re.DOTALL,
+                    )
+                ]
+                products = [schema for schema in schemas if schema.get("@type") == "Product"]
+                self.assertEqual(len(products), 1)
+                schema = products[0]
+                self.assertEqual(schema["url"], CANONICAL_PAGES[relative_path])
+                self.assertTrue(schema["name"])
+                self.assertTrue(schema["description"])
+                self.assertIn(product["image"], schema["image"])
+                self.assertNotIn("offers", schema)
+                self.assertNotIn("aggregateRating", schema)
+
+    def test_homepage_product_cards_link_to_product_pages(self):
+        product_filenames = (
+            "product-cr80-aluminum-cards.html",
+            "product-custom-shape-blanks.html",
+            "product-oversized-aluminum-blanks.html",
+            "product-round-specialty-blanks.html",
+        )
+        for homepage_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(homepage_path)):
+                homepage = (self.project_root / homepage_path).read_text(encoding="utf-8")
+                for filename in product_filenames:
+                    self.assertIn(f'href="{filename}"', homepage)
+
+    def test_contact_form_supports_product_query_prefill(self):
+        script = (self.project_root / "js/contact-form.js").read_text(encoding="utf-8")
+        self.assertIn("URLSearchParams", script)
+        self.assertRegex(script, r"\.get\(['\"]product['\"]\)")
+        for product in PRODUCT_PAGES.values():
+            self.assertIn(product["interest"], script)
+
+    def test_homepages_cache_bust_the_contact_form_script(self):
+        for homepage_path in LOCALIZED_HOME_PAGES:
+            with self.subTest(page=str(homepage_path)):
+                homepage = (self.project_root / homepage_path).read_text(encoding="utf-8")
+                contact_version = re.search(
+                    r'<script src="(?:\.\./)?js/contact-form\.js\?v=([^"]+)" defer></script>',
+                    homepage,
+                )
+                marketing_version = re.search(
+                    r'<script src="/js/marketing\.js\?v=([^"]+)" defer></script>',
+                    homepage,
+                )
+                self.assertIsNotNone(contact_version)
+                self.assertIsNotNone(marketing_version)
+                self.assertEqual(
+                    contact_version.group(1),
+                    marketing_version.group(1),
+                    "contact and marketing logic must be released under one cache version",
+                )
+                self.assertNotRegex(
+                    homepage,
+                    r'contact-form\.js\?v=20260829-products',
+                )
+
+
+class PromotionReadinessTests(unittest.TestCase):
+    def setUp(self):
+        self.project_root = Path(__file__).resolve().parents[1]
+
+    def test_public_sales_email_is_consistent(self):
+        expected_email = "zengshifan@yushiglobal.cn"
+        known_typo = "zneg" + "shifan@yushiglobal.cn"
+        public_text_files = sorted(
+            {
+                *self.project_root.glob("*.html"),
+                *self.project_root.glob("*.md"),
+                *self.project_root.glob("js/*.js"),
+                *self.project_root.glob("chatbot/*.html"),
+                *self.project_root.glob("chatbot/*.js"),
+                *self.project_root.glob("chatbot/*.md"),
+                *self.project_root.glob("pl/*.html"),
+                *self.project_root.glob("ro/*.html"),
+            }
+        )
+        reference_count = 0
+
+        for path in public_text_files:
+            with self.subTest(file=str(path.relative_to(self.project_root))):
+                text = path.read_text(encoding="utf-8")
+                self.assertNotIn(known_typo, text)
+                addresses = {
+                    address.lower()
+                    for address in re.findall(
+                        r"[A-Za-z0-9._%+-]+@yushiglobal\.cn",
+                        text,
+                        re.IGNORECASE,
+                    )
+                }
+                if addresses:
+                    reference_count += len(addresses)
+                    self.assertEqual(addresses, {expected_email})
+
+        self.assertGreater(reference_count, 0)
+
+    def test_all_24_marketing_pages_load_versioned_consent_and_tracking_assets(self):
+        self.assertEqual(len(CANONICAL_PAGES), 24)
+        asset_patterns = {
+            "privacy consent styles": (
+                r'<link\s+rel="stylesheet"\s+'
+                r'href="/css/privacy-consent\.css\?v=([A-Za-z0-9._-]+)"\s*/?>'
+            ),
+            "marketing config": (
+                r'<script\s+src="/js/marketing-config\.js\?v=([A-Za-z0-9._-]+)"'
+                r'[^>]*></script>'
+            ),
+            "marketing runtime": (
+                r'<script\s+src="/js/marketing\.js\?v=([A-Za-z0-9._-]+)"'
+                r'[^>]*\bdefer\b[^>]*></script>'
+            ),
+        }
+        versions = set()
+
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                page_versions = []
+                for asset_name, pattern in asset_patterns.items():
+                    matches = re.findall(pattern, html)
+                    self.assertEqual(
+                        len(matches),
+                        1,
+                        f"{relative_path} must load one versioned {asset_name} asset",
+                    )
+                    page_versions.append(matches[0])
+                self.assertEqual(
+                    len(set(page_versions)),
+                    1,
+                    f"{relative_path} must use one promotion asset version",
+                )
+                versions.add(page_versions[0])
+
+        self.assertEqual(len(versions), 1, "all marketing pages must share one asset version")
+
+    def test_localized_privacy_pages_have_correct_metadata_copy_and_controls(self):
+        expected_alternates = {
+            "en": f"{PRIMARY_ORIGIN}/privacy.html",
+            "ro": f"{PRIMARY_ORIGIN}/ro/privacy.html",
+            "pl": f"{PRIMARY_ORIGIN}/pl/privacy.html",
+            "x-default": f"{PRIMARY_ORIGIN}/privacy.html",
+        }
+
+        for relative_path, expected in PRIVACY_PAGES.items():
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                self.assertIn(f'<html lang="{expected["lang"]}">', html)
+                self.assertIn('<meta name="robots" content="noindex, follow" />', html)
+                self.assertIn(
+                    f'<link rel="canonical" href="{expected["canonical"]}" />',
+                    html,
+                )
+                alternates = dict(
+                    re.findall(
+                        r'<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+'
+                        r'href="([^"]+)"',
+                        html,
+                    )
+                )
+                self.assertEqual(alternates, expected_alternates)
+                self.assertRegex(
+                    html,
+                    rf'<a\s+href="privacy\.html"\s+lang="{expected["lang"]}"\s+'
+                    rf'aria-current="page">{expected["lang"].upper()}</a>',
+                )
+                self.assertIn(f'<h1>{expected["heading"]}</h1>', html)
+                self.assertIn(expected["settings"], html)
+                self.assertIn("data-consent-settings", html)
+                self.assertIn("alumcraft_consent_v1", html)
+                self.assertIn("alumcraft_attribution_v1", html)
+                for provider in ("Coze", "QQ Mail", "Google", "WhatsApp"):
+                    self.assertIn(provider, html)
+                self.assertIn("https://business.safety.google/privacy/", html)
+
+    def test_privacy_pages_load_versioned_consent_assets(self):
+        versions = set()
+        for relative_path in PRIVACY_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                prefix = "" if len(relative_path.parts) == 1 else "../"
+                patterns = (
+                    rf'href="{re.escape(prefix)}css/privacy-consent\.css\?v=([^"]+)"',
+                    rf'src="{re.escape(prefix)}js/marketing-config\.js\?v=([^"]+)"',
+                    rf'src="{re.escape(prefix)}js/marketing\.js\?v=([^"]+)"',
+                )
+                page_versions = []
+                for pattern in patterns:
+                    matches = re.findall(pattern, html)
+                    self.assertEqual(len(matches), 1)
+                    page_versions.append(matches[0])
+                self.assertEqual(len(set(page_versions)), 1)
+                versions.add(page_versions[0])
+        self.assertEqual(len(versions), 1)
+
+    def test_homepage_inquiry_notices_link_to_same_language_privacy_page(self):
+        for expected in PRIVACY_PAGES.values():
+            with self.subTest(home=str(expected["home"])):
+                html = (self.project_root / expected["home"]).read_text(encoding="utf-8")
+                purpose_note = re.search(
+                    r'<p\s+id="form-purpose-note"[^>]*>(.*?)</p>',
+                    html,
+                    re.DOTALL,
+                )
+                self.assertIsNotNone(purpose_note)
+                self.assertIn(f'href="{expected["home_href"]}"', purpose_note.group(1))
+                self.assertIn(expected["home_label"], purpose_note.group(1))
+
+    def test_public_copy_avoids_unverified_commercial_commitments(self):
+        claim_sensitive_files = (
+            Path("index.html"),
+            Path("ro/index.html"),
+            Path("pl/index.html"),
+            Path("applications.html"),
+            Path("ro/applications.html"),
+            Path("pl/applications.html"),
+            Path("faq.html"),
+            Path("ro/faq.html"),
+            Path("pl/faq.html"),
+            Path("blog-how-to-sublimate-aluminum.html"),
+            Path("blog-sublimation-blank-thickness-guide.html"),
+            Path("blog-custom-die-cut-aluminum.html"),
+            Path("chatbot/index.html"),
+            Path("chatbot/chat.js"),
+            Path("js/contact-form.js"),
+            Path("TikTok_Content_Calendar.md"),
+        )
+        forbidden_claims = {
+            "invented order volumes": (
+                r"\b(?:50[ ,]?000|250[ ,]?000|275[ ,]?000|320K)\b"
+            ),
+            "fixed tooling prices": r"(?:¥\s*3,?000|\$\s*420)\b",
+            "guaranteed free samples": (
+                r"\bfree samples?\b|\bmostre gratuite\b|\bdarmowe pr[oó]bki\b"
+            ),
+            "fixed preparation or production time": (
+                r"\b(?:3\s*[–-]\s*5|7\s*[–-]\s*15|20\s*[–-]\s*30)\s*"
+                r"(?:business days?|zile(?: lucrătoare)?|dni(?: roboczych)?)\b"
+            ),
+            "guaranteed 24-hour reply": (
+                r"\bwithin 24 hours\b|\bîn 24 de ore\b|\bw ciągu 24 godzin\b"
+            ),
+        }
+
+        for relative_path in claim_sensitive_files:
+            content = (self.project_root / relative_path).read_text(encoding="utf-8")
+            for label, pattern in forbidden_claims.items():
+                with self.subTest(page=str(relative_path), claim=label):
+                    self.assertIsNone(re.search(pattern, content, re.IGNORECASE))
+
+    def test_public_page_search_snippets_are_concise(self):
+        for relative_path in CANONICAL_PAGES:
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                title = re.search(r"<title>(.*?)</title>", html, re.DOTALL)
+                description = re.search(
+                    r'<meta name="description" content="([^"]+)"', html
+                )
+                self.assertIsNotNone(title)
+                self.assertIsNotNone(description)
+                self.assertLessEqual(len(unescape(title.group(1).strip())), 60)
+                self.assertLessEqual(len(unescape(description.group(1).strip())), 160)
+
+    def test_faq_structured_data_matches_visible_answers(self):
+        def normalize_text(value):
+            collapsed = " ".join(unescape(value).split())
+            return re.sub(r"\s+([,.;:!?])", r"\1", collapsed)
+
+        for relative_path in (Path("faq.html"), Path("ro/faq.html"), Path("pl/faq.html")):
+            with self.subTest(page=str(relative_path)):
+                html = (self.project_root / relative_path).read_text(encoding="utf-8")
+                structured_blocks = re.findall(
+                    r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
+                    html,
+                    re.DOTALL,
+                )
+                faq_data = next(
+                    (
+                        json.loads(block)
+                        for block in structured_blocks
+                        if json.loads(block).get("@type") == "FAQPage"
+                    ),
+                    None,
+                )
+                self.assertIsNotNone(faq_data)
+                rendered_markup = re.sub(
+                    r"<(?:script|style)\b[^>]*>.*?</(?:script|style)>",
+                    " ",
+                    html,
+                    flags=re.DOTALL,
+                )
+                visible_text = normalize_text(
+                    re.sub(r"<[^>]+>", " ", rendered_markup)
+                )
+                for item in faq_data["mainEntity"]:
+                    question = normalize_text(item["name"])
+                    answer = normalize_text(item["acceptedAnswer"]["text"])
+                    self.assertIn(question, visible_text)
+                    self.assertIn(answer, visible_text)
+
+    def test_marketing_config_enables_only_the_verified_ga4_tag(self):
+        config = (self.project_root / "js/marketing-config.js").read_text(encoding="utf-8")
+        configured_ids = re.findall(
+            r"\bgoogleTagId\s*:\s*(['\"])(.*?)\1",
+            config,
+        )
+
+        self.assertEqual(len(configured_ids), 1)
+        self.assertEqual(configured_ids[0][1], "G-EPE558KTZQ")
+        self.assertEqual(
+            re.findall(r"\b(?:G|AW|DC)-[A-Z0-9-]+\b", config),
+            ["G-EPE558KTZQ"],
+        )
+
+    def test_marketing_runtime_syncs_consent_and_sanitizes_page_view_url(self):
+        runtime = (self.project_root / "js/marketing.js").read_text(encoding="utf-8")
+
+        self.assertIn("window.addEventListener('storage', handleConsentStorage)", runtime)
+        self.assertIn("window.location.reload()", runtime)
+        self.assertIn("page_location: sanitizeUrl(window.location.href)", runtime)
+        self.assertIn("pageConfig.page_referrer = pageReferrer", runtime)
+
+
+class HttpIntegrationTests(unittest.TestCase):
+    def setUp(self):
+        server.SUBMITTER_RATE_LIMITER = server.RateLimiter(
+            server.RATE_LIMIT_MAX_REQUESTS,
+            server.RATE_LIMIT_WINDOW_SECONDS,
+        )
+        server.GLOBAL_RATE_LIMITER = server.RateLimiter(
+            server.GLOBAL_RATE_LIMIT_MAX_REQUESTS,
+            server.GLOBAL_RATE_LIMIT_WINDOW_SECONDS,
+            max_clients=1,
+        )
+        server.DELIVERY_TRACKER = server.DeliveryTracker(
+            server.DELIVERY_TRACKER_TTL_SECONDS,
+            server.DELIVERY_TRACKER_MAX_ENTRIES,
+        )
+
+    def test_health_and_private_file_protection(self):
+        with patch.dict(os.environ, {}, clear=True), running_server() as base_url:
+            status, health = read_json(f"{base_url}/api/health")
+            self.assertEqual((status, health), (200, {"ok": True, "mail_configured": False}))
+            with self.assertRaises(HTTPError) as blocked:
+                urlopen(f"{base_url}/server.py", timeout=3)
+            self.assertEqual(blocked.exception.code, 404)
+
+    def test_product_detail_pages_are_public(self):
+        with running_server() as base_url:
+            for relative_path in PRODUCT_PAGES:
+                with self.subTest(page=str(relative_path)):
+                    with urlopen(
+                        f"{base_url}/{relative_path.as_posix()}",
+                        timeout=3,
+                    ) as response:
+                        self.assertEqual(response.status, 200)
+                        self.assertIn("text/html", response.headers.get_content_type())
+
+    def test_indexnow_ownership_key_is_publicly_served(self):
+        with running_server() as base_url:
+            with urlopen(f"{base_url}/{INDEXNOW_KEY}.txt", timeout=3) as response:
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.headers.get_content_type(), "text/plain")
+                self.assertEqual(response.read().decode("utf-8").strip(), INDEXNOW_KEY)
+
+    def test_legacy_domain_redirect_preserves_path_and_query(self):
+        parsed_legacy = urlsplit(LEGACY_ORIGIN)
+        request_target = "/ro/faq.html?from=legacy"
+        proxy_headers = (
+            {"Host": parsed_legacy.netloc},
+            {
+                "Host": "internal-proxy.example",
+                "X-Forwarded-Host": parsed_legacy.netloc,
+            },
+        )
+
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            for method in ("GET", "HEAD"):
+                for headers in proxy_headers:
+                    with self.subTest(method=method, headers=headers):
+                        connection = HTTPConnection(
+                            parsed_local.hostname,
+                            parsed_local.port,
+                            timeout=3,
+                        )
+                        connection.request(method, request_target, headers=headers)
+                        response = connection.getresponse()
+                        response.read()
+                        connection.close()
+
+                        self.assertEqual(response.status, 301)
+                        self.assertEqual(
+                            response.getheader("Location"),
+                            f"{PRIMARY_ORIGIN}{request_target}",
+                        )
+
+    def test_primary_domain_is_not_redirected(self):
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            connection = HTTPConnection(
+                parsed_local.hostname,
+                parsed_local.port,
+                timeout=3,
+            )
+            connection.request(
+                "GET",
+                "/api/health",
+                headers={"Host": urlsplit(PRIMARY_ORIGIN).netloc},
+            )
+            response = connection.getresponse()
+            payload = json.loads(response.read())
+            connection.close()
+
+        self.assertEqual(response.status, 200)
+        self.assertTrue(payload["ok"])
+
+    def test_index_document_urls_redirect_to_canonical_directories(self):
+        redirects = {
+            "/index.html": "/",
+            "/ro/index.html?source=old-link": "/ro/?source=old-link",
+            "/pl/index.html": "/pl/",
+        }
+
+        with running_server() as base_url:
+            parsed_local = urlsplit(base_url)
+            for method in ("GET", "HEAD"):
+                for request_target, expected_location in redirects.items():
+                    with self.subTest(method=method, path=request_target):
+                        connection = HTTPConnection(
+                            parsed_local.hostname,
+                            parsed_local.port,
+                            timeout=3,
+                        )
+                        connection.request(
+                            method,
+                            request_target,
+                            headers={"Host": urlsplit(PRIMARY_ORIGIN).netloc},
+                        )
+                        response = connection.getresponse()
+                        response.read()
+                        connection.close()
+
+                        self.assertEqual(response.status, 301)
+                        self.assertEqual(
+                            response.getheader("Location"), expected_location
+                        )
+
+    @patch("server.send_email")
+    def test_primary_origin_allowlist_works_behind_proxy(self, mocked_send):
+        form = {**VALID_FORM, "submission_id": "test-primary-origin-0001"}
+        request_data = urlencode(form).encode()
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Origin": PRIMARY_ORIGIN,
+        }
+        environment = MAIL_ENVIRONMENT | {"ALLOWED_ORIGINS": PRIMARY_ORIGIN}
+
+        with patch.dict(os.environ, environment, clear=True), running_server() as base_url:
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=request_data,
+                headers=headers,
+            )
+
+        self.assertEqual((status, result), (200, {"ok": True}))
+        mocked_send.assert_called_once()
+
+    def test_unconfigured_form_fails_without_false_success(self):
+        request_data = urlencode(VALID_FORM).encode()
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        with patch.dict(os.environ, {}, clear=True), running_server() as base_url:
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=request_data,
+                headers=headers,
+            )
+        self.assertEqual(status, 503)
+        self.assertEqual(result["code"], "mail_unavailable")
+
+    @patch("server.send_email")
+    def test_valid_form_returns_success_only_after_delivery(self, mocked_send):
+        form = {**VALID_FORM, "submission_id": "test-valid-http-0001"}
+        request_data = urlencode(form).encode()
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        with patch.dict(os.environ, MAIL_ENVIRONMENT, clear=True), running_server() as base_url:
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=request_data,
+                headers=headers,
+            )
+        self.assertEqual((status, result), (200, {"ok": True}))
+        mocked_send.assert_called_once()
+
+    @patch("server.send_email")
+    def test_successful_retry_is_not_delivered_twice(self, mocked_send):
+        form = {**VALID_FORM, "submission_id": "test-duplicate-http-0001"}
+        request_data = urlencode(form).encode()
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        with patch.dict(os.environ, MAIL_ENVIRONMENT, clear=True), running_server() as base_url:
+            first = read_json(f"{base_url}/api/inquiry", data=request_data, headers=headers)
+            retry = read_json(f"{base_url}/api/inquiry", data=request_data, headers=headers)
+        self.assertEqual(first, (200, {"ok": True}))
+        self.assertEqual(retry, (200, {"ok": True, "duplicate": True}))
+        mocked_send.assert_called_once()
+
+    def test_cross_origin_submission_is_rejected(self):
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Origin": "https://attacker.example",
+        }
+        with patch.dict(os.environ, MAIL_ENVIRONMENT, clear=True), running_server() as base_url:
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=urlencode(VALID_FORM).encode(),
+                headers=headers,
+            )
+        self.assertEqual(status, 403)
+        self.assertEqual(result["code"], "origin_not_allowed")
+
+    def test_honeypot_does_not_require_or_send_mail(self):
+        form = {**VALID_FORM, "bot-field": "spam"}
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+        with (
+            patch.dict(os.environ, {}, clear=True),
+            patch("server.send_email") as mocked_send,
+            running_server() as base_url,
+        ):
+            status, result = read_json(
+                f"{base_url}/api/inquiry",
+                data=urlencode(form).encode(),
+                headers=headers,
+            )
+        self.assertEqual((status, result), (200, {"ok": True}))
+        mocked_send.assert_not_called()
+
+
+if __name__ == "__main__":
+    unittest.main()
