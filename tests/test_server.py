@@ -832,6 +832,41 @@ class PromotionReadinessTests(unittest.TestCase):
     def setUp(self):
         self.project_root = Path(__file__).resolve().parents[1]
 
+    def test_public_sales_email_is_consistent(self):
+        expected_email = "zengshifan@yushiglobal.cn"
+        known_typo = "zneg" + "shifan@yushiglobal.cn"
+        public_text_files = sorted(
+            {
+                *self.project_root.glob("*.html"),
+                *self.project_root.glob("*.md"),
+                *self.project_root.glob("js/*.js"),
+                *self.project_root.glob("chatbot/*.html"),
+                *self.project_root.glob("chatbot/*.js"),
+                *self.project_root.glob("chatbot/*.md"),
+                *self.project_root.glob("pl/*.html"),
+                *self.project_root.glob("ro/*.html"),
+            }
+        )
+        reference_count = 0
+
+        for path in public_text_files:
+            with self.subTest(file=str(path.relative_to(self.project_root))):
+                text = path.read_text(encoding="utf-8")
+                self.assertNotIn(known_typo, text)
+                addresses = {
+                    address.lower()
+                    for address in re.findall(
+                        r"[A-Za-z0-9._%+-]+@yushiglobal\.cn",
+                        text,
+                        re.IGNORECASE,
+                    )
+                }
+                if addresses:
+                    reference_count += len(addresses)
+                    self.assertEqual(addresses, {expected_email})
+
+        self.assertGreater(reference_count, 0)
+
     def test_all_24_marketing_pages_load_versioned_consent_and_tracking_assets(self):
         self.assertEqual(len(CANONICAL_PAGES), 24)
         asset_patterns = {

@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const SALES_EMAIL = 'znegshifan@yushiglobal.cn';
+  const SALES_EMAIL = 'zengshifan@yushiglobal.cn';
   const REQUEST_TIMEOUT_MS = 30000;
   const PRODUCT_INTERESTS = [
     'Standard CR80 Cards',

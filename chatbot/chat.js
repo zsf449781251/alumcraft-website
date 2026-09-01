@@ -3,7 +3,7 @@
  * Static, no external API key exposed in the browser.
  */
 
-const CONTACT_INFO = 'Email: znegshifan@yushiglobal.cn\nWhatsApp: +86 153 8620 1892';
+const CONTACT_INFO = 'Email: zengshifan@yushiglobal.cn\nWhatsApp: +86 153 8620 1892';
 
 let isGenerating = false;
 
@@ -87,7 +87,7 @@ function buildLocalResponse(message) {
   }
 
   if (text.includes('sample')) {
-    return 'Sample options can be discussed after we review your specifications. Availability, cost, preparation time, shipping, and any order credit depend on the product, customization, quantity, packaging, and destination and are confirmed in the written quotation.\n\nPlease email your required size, shape, thickness, finish, quantity, packaging, and destination to znegshifan@yushiglobal.cn.';
+    return 'Sample options can be discussed after we review your specifications. Availability, cost, preparation time, shipping, and any order credit depend on the product, customization, quantity, packaging, and destination and are confirmed in the written quotation.\n\nPlease email your required size, shape, thickness, finish, quantity, packaging, and destination to zengshifan@yushiglobal.cn.';
   }
 
   if (text.includes('custom') || text.includes('shape') || text.includes('die')) {
@@ -95,7 +95,7 @@ function buildLocalResponse(message) {
   }
 
   if (text.includes('price') || text.includes('quote') || text.includes('cost')) {
-    return 'To quote accurately, we need size, shape, thickness, coating or surface requirement, holes or corners, quantity, packaging, and destination.\n\nSend those details to znegshifan@yushiglobal.cn. Price, minimum quantity, sample options, production timing, and shipping are subject to the written quotation.';
+    return 'To quote accurately, we need size, shape, thickness, coating or surface requirement, holes or corners, quantity, packaging, and destination.\n\nSend those details to zengshifan@yushiglobal.cn. Price, minimum quantity, sample options, production timing, and shipping are subject to the written quotation.';
   }
 
   if (text.includes('ship') || text.includes('delivery') || text.includes('lead time')) {

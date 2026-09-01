@@ -74,5 +74,5 @@ The root `_redirects` file forwards the legacy Netlify hostname to the primary C
 
 ## Contact
 
-- Email: `znegshifan@yushiglobal.cn`
+- Email: `zengshifan@yushiglobal.cn`
 - WhatsApp: `+86 153 8620 1892`

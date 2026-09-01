@@ -37,7 +37,7 @@ The preview server is implemented in PowerShell and does not require Python, Nod
 
 All serious inquiries are handed off to:
 
-- Email: znegshifan@yushiglobal.cn
+- Email: zengshifan@yushiglobal.cn
 - WhatsApp: +86 153 8620 1892
 
 ## Static Deployment

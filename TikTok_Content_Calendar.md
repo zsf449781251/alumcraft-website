@@ -66,7 +66,7 @@
   ```
   Custom Aluminum Sublimation Blank Supplier
   Sizes, shapes, coatings & packaging | Terms by written quote
-  📧 znegshifan@yushiglobal.cn
+  📧 zengshifan@yushiglobal.cn
   📱 WhatsApp: +86 153 8620 1892
   🔗 Website in bio
   ```
